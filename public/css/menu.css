@@ -1,0 +1,49 @@
+.nv {
+    top: 0;
+    position: absolute;
+    left: -10em;
+}
+
+.mostrar {
+    top: 72px;
+    z-index: 20;
+    position: absolute;
+    left: 0;
+}
+
+.menu {
+    font-family: 'Abril Fatface', cursive;
+    background-color: #ffecbe;
+    line-height: 42px;
+    padding-left: 0;
+    width: 10em;
+    box-shadow: 3px 0 rgba(0, 90, 7, 0.16);
+}
+
+.menu a {
+    transition: all .5s;
+    display: block;
+    color: #ff0030;
+    text-decoration: none;
+    width: 100%;
+}
+
+.menu a:hover {
+    margin-left: 1em;
+}
+
+.menu li {
+    box-shadow: 3px 0 rgba(0, 90, 7, 0.16) inset;
+    transition: all .5s;
+}
+
+.menu li:hover {
+    box-shadow: 10em 0 rgba(0, 90, 7, 0.16) inset;
+}
+
+.btnIm {
+    margin-left: 50px;
+    background-image: url("../images/btn.png");
+    width: 35px;
+    height: 35px;
+}

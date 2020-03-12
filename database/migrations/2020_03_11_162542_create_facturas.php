@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolesTable extends Migration
+class CreateFacturas extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('facturas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->nullable(false)->unique();
-            $table->string('descripcion', 100)->nullable(true);
+            $table->bigInteger('id_producto')->unsigned();
+            $table->bigInteger('id_pedido')->unsigned();
+            $table->foreign('id_pedido')->references('id')->on('pedidos');
+            $table->foreign('id_producto')->references('id')->on('productos');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('facturas');
     }
 }

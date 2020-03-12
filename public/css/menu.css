@@ -47,3 +47,26 @@
     width: 35px;
     height: 35px;
 }
+
+.options {
+    margin-right: 30px;
+    background-color: rgba(68, 35, 94, 0.48);
+}
+
+.admin {
+    margin-top: 5em;
+    margin-left: 3em;
+    width: 127.5em;
+    height: 51em;
+}
+
+#apoyo a {
+    margin-right: 5em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+#apoyo a:hover {
+    transition: all .5s;
+    background-color: lightcyan;
+}

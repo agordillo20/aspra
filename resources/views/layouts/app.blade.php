@@ -24,7 +24,7 @@
 <body>
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light bg-primary">
-        <a class="navbar-brand text-white" href="{{ url('/') }}">
+        <a id="logo" class="navbar-brand text-white" href="{{ url('/') }}">
             <img src="{{URL::asset('images/logo.png')}}" alt="no encontrada">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -61,10 +61,10 @@
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                {{ __('Salir') }}
-                            </a>
+                               onclick="
+                                event.preventDefault();
+                                document.getElementById('logout-form').submit();
+                                ">{{ __('Salir') }}</a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
@@ -90,7 +90,7 @@
         @yield('content')
     </main>
 </div>
-<script>
+<script type="application/javascript">
     function mostrar() {
         var estado = document.getElementById('navbar');
         if (estado.className === 'nv') {

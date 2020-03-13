@@ -18,12 +18,15 @@ class CreateProductos extends Migration
             $table->bigInteger('id_categoria')->unsigned();
             $table->bigInteger('id_fabricante')->unsigned();
             $table->string('cod_producto');
-            $table->double('predio_venta');
-            $table->double('predio_compra');
+            $table->double('precio_venta');
+            $table->double('precio_compra');
             $table->integer('stock_actual');
             $table->integer('stock_minimo');
             $table->string('descripcion');
             $table->string('foto');
+            $table->boolean('rebajado');
+            $table->double('precio_actual');
+            $table->double('precio_anterior');
             $table->timestamps();
             $table->foreign('id_fabricante')->references('id')->on('fabricantes');
             $table->foreign('id_categoria')->references('id')->on('categorias');

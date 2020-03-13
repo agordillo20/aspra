@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
 {
-    protected $fillable = ['cod_producto', 'predio_venta', 'predio_compra', 'stock_actual', 'stock_minimo', 'descripcion', 'foto'];
+    protected $fillable = ['cod_producto', 'precio_venta', 'precio_compra', 'stock_actual', 'stock_minimo', 'descripcion', 'foto'];
 
     public function getFabricante()
     {

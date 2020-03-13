@@ -24,9 +24,13 @@ Route::get('/admin', 'adminController@index')->name('admin');
 
 //Productos
 Route::get('/admin/add/Productos', 'productoController@add');
+Route::post('/admin/add/producto', 'productoController@add1');
 Route::get('/admin/update/Productos', 'productoController@update');
+Route::get('/admin/update/Productos', 'productoController@update1');
 Route::get('/admin/delete/Productos', 'productoController@delete');
+Route::get('/admin/delete/Productos', 'productoController@delete1');
 Route::get('/admin/list/Productos', 'productoController@show');
+Route::get('/admin/list/Productos', 'productoController@show1');
 
 //Categorias
 Route::get('/admin/add/Categorias', 'categoriaController@add');

@@ -8,7 +8,7 @@ class fabricanteController extends Controller implements interface_methods
     {
         $this->middleware('admin');
     }
-    
+
     //
     public function add()
     {
@@ -28,5 +28,25 @@ class fabricanteController extends Controller implements interface_methods
     public function show()
     {
         // TODO: Implement show() method.
+    }
+
+    public function add1()
+    {
+        // TODO: Implement add1() method.
+    }
+
+    public function update1()
+    {
+        // TODO: Implement update1() method.
+    }
+
+    public function delete1()
+    {
+        // TODO: Implement delete1() method.
+    }
+
+    public function show1()
+    {
+        // TODO: Implement show1() method.
     }
 }

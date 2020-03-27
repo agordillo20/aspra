@@ -1,7 +1,8 @@
 .nv {
     top: 0;
     position: absolute;
-    left: -10em;
+    left: -15em;
+    bottom: 0;
 }
 
 .mostrar {
@@ -9,15 +10,17 @@
     z-index: 20;
     position: absolute;
     left: 0;
+    bottom: 0;
 }
 
 .menu {
+    position: fixed;
     font-family: 'Abril Fatface', cursive;
     background-color: #ffecbe;
     line-height: 42px;
-    padding-left: 0;
-    width: 10em;
-    box-shadow: 3px 0 rgba(0, 90, 7, 0.16);
+    padding-left: 7px;
+    width: 15em;
+    height: 100%;
 }
 
 .menu a {
@@ -33,7 +36,6 @@
 }
 
 .menu li {
-    box-shadow: 3px 0 rgba(0, 90, 7, 0.16) inset;
     transition: all .5s;
 }
 
@@ -42,7 +44,8 @@
 }
 
 .btnIm {
-    margin-left: 50px;
+    margin-top: 10px;
+    margin-right: 5em;
     background-image: url("../images/btn.png");
     width: 35px;
     height: 35px;

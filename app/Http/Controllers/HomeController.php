@@ -26,9 +26,8 @@ class HomeController extends Controller
         $productos = Producto::all();
         $descripcion = array();
         foreach ($productos as $p) {
-            array_push($descripcion, $p->descripcion);
+            array_push($descripcion, explode(",", $p->descripcion)[0]);
         }
-        $separado = explode(",", $descripcion[0]);
-        return view('home', ["separado" => $separado]);
+        return view('home', ["separado" => $descripcion]);
     }
 }

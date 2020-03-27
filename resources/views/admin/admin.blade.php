@@ -42,25 +42,26 @@
             //limpiar el contenido anterior
             sec.remove();
             //añadir
+            if (nombre === "Productos") {
+                var ofertar = document.createElement("a");
+                ofertar.setAttribute("href", "admin/ofertar/" + nombre);
+                ofertar.appendChild(document.createTextNode("ofertar " + nombre));
+            }
             var add = document.createElement("a");
             add.setAttribute("href", "admin/add/" + nombre);
             add.appendChild(document.createTextNode("Añadir " + nombre));
             //mostrar
             var show = document.createElement("a");
             show.setAttribute("href", "admin/list/" + nombre);
-            show.appendChild(document.createTextNode("Ver " + nombre));
-            //modificar
-            var modify = document.createElement("a");
-            modify.setAttribute("href", "admin/update/" + nombre);
-            modify.appendChild(document.createTextNode("Actualizar " + nombre));
-            //borrar
-            var del = document.createElement("a");
-            del.setAttribute("href", "admin/delete/" + nombre);
-            del.appendChild(document.createTextNode("Borrar " + nombre));
+            show.appendChild(document.createTextNode("Listado de " + nombre));
             //añadir a los elementos padres
             var secundario = document.createElement("div");
             secundario.id = "apoyo";
-            secundario.append(add, show, modify, del);
+            if (ofertar !== undefined) {
+                secundario.append(add, show, ofertar);
+            } else {
+                secundario.append(add, show);
+            }
             principal.append(secundario);
         }
 

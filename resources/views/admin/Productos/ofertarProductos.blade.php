@@ -62,7 +62,7 @@
                             for (var i = 0; i < data.length; i++) {
                                 var option = document.createElement("option");
                                 option.setAttribute("value", data[i]['cod_producto']);
-                                option.appendChild(document.createTextNode(data[i]['cod_producto'] + " - " + data[i]['descripcion']));
+                                option.appendChild(document.createTextNode(data[i]['cod_producto'] + " - " + data[i]['nombre']));
                                 select.appendChild(option);
                             }
                             $('#porcentaje').show();

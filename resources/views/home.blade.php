@@ -25,7 +25,7 @@
                                     </div>
                                     <div class="card-footer text-center" style="margin-bottom: 3em;">
                                         <a id={{$p->id}} href="#" class="font-weight-bold"
-                                           onclick="enviar(this.id)">{{$separado[$i]}}</a>
+                                           onclick="enviar(this.id)">{{$p->nombre}}</a>
                                         <form id="show-form" action="{{route('ConsultaProducto')}}" method="post"
                                               style="display: none;">
                                             @csrf

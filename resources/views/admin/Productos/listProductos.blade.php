@@ -63,6 +63,7 @@
         </div>
     </div>
     <form action="{{route('actualizar')}}" method="post" id="form">
+        @csrf
         <input type="hidden" name="id" id="inputHidden">
     </form>
     <script type="application/javascript">

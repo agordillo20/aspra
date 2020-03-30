@@ -78,6 +78,7 @@ class productoController extends Controller implements interface_methods
 
     public function updateDescripcion(Request $request)
     {
+        //TODO: terminar
         dd($request->input());
         return response()->json();
     }
@@ -90,8 +91,8 @@ class productoController extends Controller implements interface_methods
     public function update2(Request $request)
     {
         $id = $request->input('id');
-        $producto = Producto::select('select * from producto WHERE id=' + $id);
-        return view('admin/Productos/editarProducto', ['producto' => $producto, 'descripcion' => $descripcion, 'categorias' => Categoria::all(), 'fabricantes' => Fabricante::all()]);
+        $producto = Producto::find($id);
+        return view('admin/Productos/editarProducto', ['producto' => $producto, 'categorias' => Categoria::all(), 'fabricantes' => Fabricante::all()]);
     }
 
     public function update1(Request $request)
@@ -137,11 +138,27 @@ class productoController extends Controller implements interface_methods
     public function showUser(Request $request)
     {
         $id = $request->input('id');
-        $producto = DB::table('productos')->where('id', '=', $id)->select('*')->get()[0];
-        $categoria = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->select('nombre')->get()[0];
+        $producto = Producto::find($id);
+        $descripcion = descripcion::find($producto->id_descripcion);
+        $arrayCamposDescripcion = array();
+        //Se recorren los campos de la descripcion y guarda en un array los valores de los campos que son distintos de null ...
+        foreach (DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'descripcion'") as $campo) {
+            $nombre = $campo->COLUMN_NAME;
+            if ($nombre != "id" && $nombre != "created_at" && $nombre != "updated_at") {
+                array_push($arrayCamposDescripcion, $descripcion->$nombre);
+            }
+        }
+        $categoria = Categoria::find($producto->id_categoria);
+        $arrayCamposCategoria = array();
+        foreach (DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'categorias'") as $campo) {
+            $nombre = $campo->COLUMN_NAME;
+            if ($categoria->$nombre != null && $nombre != "id" && $nombre != "nombre" && $nombre != "created_at" && $nombre != "updated_at") {
+                array_push($arrayCamposCategoria, $categoria->$nombre);
+            }
+        }
+        $Nombrecategoria = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->select('categorias.nombre')->get()[0];
         $fabricante = DB::table('productos')->join('fabricantes', 'productos.id_fabricante', '=', 'fabricantes.id')->select('razon_social')->get()[0];
-        $separado = explode(',', $producto->descripcion);
-        return view('ConsultaProducto', ['producto' => $producto, 'categoria' => $categoria, 'fabricante' => $fabricante, 'descripcion' => $separado]);
+        return view('ConsultaProducto', ['producto' => $producto, 'nombre' => $Nombrecategoria, 'fabricante' => $fabricante, 'camposCategoria' => $arrayCamposCategoria, 'camposDescripcion' => $arrayCamposDescripcion]);
     }
 
     public function ofertar()

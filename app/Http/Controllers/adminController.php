@@ -60,7 +60,8 @@ class adminController extends Controller
                 //obtener cada columna que necesita
                 array_push($array1, $caracteristicas[$i]->COLUMN_NAME);
             }
-            $id_categoria = Producto::all()->where('id_descripcion', '=', $id)[0]->id_categoria;
+            $producto = Producto::where('id_descripcion', '=', $id)->get()->toArray()[0];
+            $id_categoria = $producto['id_categoria'];
             foreach ($array1 as $a) {
                 array_push($array2, DB::select("select " . $a . " from categorias where id=" . $id_categoria)[0]->$a);
             }
@@ -92,7 +93,7 @@ class adminController extends Controller
         if (substr_compare('cod_', $busqueda, 0, 4) == 0) {
             $producto = DB::table('productos')->select("*")->where('cod_producto', 'like', $busqueda . "%")->where('rebajado', '=', '0')->get("*");
         } else {
-            $producto = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->select("*")->where('nombre', 'like', $busqueda . "%")->where('rebajado', '=', '0')->get("*");
+            $producto = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->select("productos.*")->where('categorias.nombre', 'like', $busqueda . "%")->where('rebajado', '=', '0')->get('productos.*');
         }
         return response()->json($producto);
     }
@@ -113,11 +114,11 @@ class adminController extends Controller
     {
         $id_categoria = $request->input('id_categoria');
         $caracteristicas = DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'categorias'");
-        $categoria = Categoria::all()->where('id', '=', $id_categoria)[0];
+        $categoria = Categoria::find($id_categoria);
         $array = array();
         foreach ($caracteristicas as $c) {
             $nombre = $c->COLUMN_NAME;
-            if ($categoria->$nombre != null && $nombre != "id") {
+            if ($categoria->$nombre != null && $nombre != "id" && $nombre != "nombre") {
                 array_push($array, $categoria->$nombre);
             }
         }

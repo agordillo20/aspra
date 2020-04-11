@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class=" card card-header w-auto text-center font-weight-bold bg-success"
-                     style="margin:5em auto 0;padding-top: 2em;text-transform: uppercase">{{$producto->nombre}}</div>
+                     style="margin:3.5em auto 0;padding-top: 1em;text-transform: uppercase">{{$producto->nombre}}</div>
                 <div class="card-body bg-dark text-white font-weight-bold" style="margin:0 auto">
                     <div class="row">
                         <div class="col-9">
@@ -19,21 +19,24 @@
                                     <td class="col-sm-2">{{$fabricante->razon_social}} - {{$producto->nombre}}</td>
                                 </tr>
                                 @for($i=0;$i<count($camposCategoria);$i++)
-                                    <tr>
-                                        <td class="col-sm-1">{{$camposCategoria[$i]}}</td>
-                                        <td class="col-sm-2" id="descripcion {{$i}}">{{$camposDescripcion[$i]}}</td>
-                                    </tr>
+                                    @if($camposDescripcion[$i]!=null)
+                                        <tr>
+                                            <td class="col-sm-1">{{$camposCategoria[$i]}}</td>
+                                            <td class="col-sm-2 descripcion{{$i}}">{{$camposDescripcion[$i]}}</td>
+                                        </tr>
+                                    @endif
                                 @endfor
                             </table>
                         </div>
                         <div class="col text-center">
-                            <img class="img-responsive" src={{$producto->foto}} th:alt="foto"
+                            <img class="img-responsive" id="foto" src={{$producto->foto}} th:alt="foto"
                                  style="height: 230px;width: 200px;"/>
                             <div style="margin-top: .5em;padding: .5em">
                                 <pre class="font-weight-bold"
                                      style="color: red;">{{$producto->stock_actual}} Restantes</pre>
                                 Precio : {{$producto->precio_venta}} €<br>
-                                <button class="btn btn-outline-primary" style="margin-top: .25em">Añadir al Carrito
+                                <button class="btn btn-outline-primary" style="margin-top: .25em"
+                                        onclick="addCarrito({{$producto}})">Añadir al Carrito
                                 </button>
                             </div>
 
@@ -46,4 +49,13 @@
             </div>
         </div>
     </div>
+    <script type="application/javascript">
+        function addCarrito(producto) {
+            $('#foto').toggleClass("volar");
+            setTimeout(function () {
+                $('#foto').toggleClass("volar");
+                //todo:agregar al carrito
+            }, 1500);
+        }
+    </script>
 @endsection

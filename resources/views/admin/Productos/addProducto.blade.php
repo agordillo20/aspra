@@ -112,7 +112,7 @@
                             <div class="form-group row">
                                 <label for="foto" class="col-md-2 col-form-label text-md-left">{{ __('Foto') }}</label>
                                 <div class="col-md-12">
-                                    <input id="foto" type="file"
+                                    <input id="foto" type="file" accept="image/*"
                                            class="form-control @error('foto') is-invalid @enderror" name="foto"
                                            required autocomplete="foto">
 

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Fabricante;
+use Illuminate\Http\Request;
+
 class fabricanteController extends Controller implements interface_methods
 {
     public function __construct()
@@ -9,44 +12,45 @@ class fabricanteController extends Controller implements interface_methods
         $this->middleware('admin');
     }
 
-    //
+
     public function add()
     {
-        // TODO: Implement add() method.
+        return view('/admin/Fabricantes/addFabricantes');
     }
 
-    public function update()
+    public function add1(Request $request)
     {
-        // TODO: Implement update() method.
+        $fabricante = new Fabricante();
+        $fabricante->razon_social = $request->input('razon_social');
+        $fabricante->origen = $request->input('origen');
+        $fabricante->descripcion = $request->input('descripcion');
+        $fabricante->save();
+        return redirect('/admin/add/Fabricantes');
     }
 
-    public function delete()
+    public function update(Request $request)
     {
-        // TODO: Implement delete() method.
+        $fabricante = Fabricante::find($request->input('id'));
+        $fabricante->razon_social = $request->input('razon_social');
+        $fabricante->origen = $request->input('origen');
+        $fabricante->descripcion = $request->input('descripcion');
+        $fabricante->save();
+        return redirect('/admin/list/Fabricantes');
     }
 
-    public function show()
-    {
-        // TODO: Implement show() method.
-    }
-
-    public function add1()
-    {
-        // TODO: Implement add1() method.
-    }
-
-    public function update1()
+    public function update1(Request $request)
     {
         // TODO: Implement update1() method.
     }
 
-    public function delete1()
+    public function delete(Request $request)
     {
-        // TODO: Implement delete1() method.
+        Fabricante::destroy($request->input('idFabricante'));
+        return redirect('/admin/list/Fabricantes');
     }
 
-    public function show1()
+    public function show()
     {
-        // TODO: Implement show1() method.
+        return view('/admin/Fabricantes/listFabricantes');
     }
 }

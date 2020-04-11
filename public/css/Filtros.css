@@ -1,0 +1,28 @@
+.filtros {
+    font-family: serif;
+    overflow: auto;
+    overflow-x: hidden;
+    position: fixed;
+    height: 90%;
+    width: 19em;
+    right: -19em;
+    top: 5em;
+    padding-top: 20px;
+
+}
+
+.filtros.ocultar {
+    right: .25em;
+}
+
+.flecha {
+    position: fixed;
+    z-index: 10;
+    top: 5em;
+    right: .2em;
+}
+
+.flecha.cambiar {
+    right: 19.2em;
+    top: 5.1em;
+}

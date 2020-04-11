@@ -1,0 +1,161 @@
+@font-face {
+    font-family: Alegra;
+    font-style: normal;
+    font-weight: 900;
+    src: url('../fonts/alegra.otf');
+}
+
+.principal {
+    display: flex;
+    align-items: center;
+    margin-bottom: .3em;
+    font-size: 25px;
+    font-family: Alegra, serif;
+}
+
+.principal img {
+    margin-left: .5em;
+    width: 40px;
+    height: 40px;
+    border-radius: 15px;
+    background-color: lightgrey;
+}
+
+.secundario {
+    border-radius: 14px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    height: 7em;
+    text-align: center;
+    padding: 4% 0;
+    background-repeat: revert;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: top;
+}
+
+.secundario pre {
+    font-weight: lighter;
+    font-size: 12px;
+}
+
+.pedidos {
+    padding-top: 1em;
+    font-weight: bold;
+    border-radius: 14px;
+    border-style: solid;
+    border-bottom-width: 0;
+    border-top-width: 0;
+    margin-top: .3em;
+    height: 8em;
+    width: 8em;
+}
+
+.pedidos:hover {
+    background-color: rgba(34, 34, 34, 0.15);
+}
+
+.pedidos p {
+    font-size: 50px;
+    color: gray;
+    font-family: Alegra, sans-serif;
+}
+
+.password p {
+    font-weight: bold;
+    font-size: 20px;
+    font-family: serif;
+}
+
+.password label {
+    font-weight: bold;
+}
+
+.direcciones p {
+    font-weight: bold;
+    font-size: 20px;
+    font-family: serif;
+}
+
+.direccion {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.centro {
+    background: white;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .8);
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    width: 800px;
+}
+
+.centro button {
+    padding: 0.1em;
+    border-radius: 7px;
+    margin-top: 2.3em;
+}
+
+.centro a {
+    cursor: pointer;
+    display: block;
+}
+
+.centro a:hover {
+    color: grey;
+}
+
+.direccion.hide {
+    visibility: hidden;
+}
+
+.alerta {
+    position: relative;
+    z-index: 40;
+    top: 0;
+}
+
+.cabecera label {
+    text-decoration: underline;
+}
+
+.back {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back.hide {
+    visibility: hidden;
+}
+
+.Editardireccion {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Editardireccion.hide {
+    visibility: hidden;
+}

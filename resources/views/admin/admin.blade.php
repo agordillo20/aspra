@@ -64,6 +64,5 @@
             }
             principal.append(secundario);
         }
-
     </script>
 @endsection

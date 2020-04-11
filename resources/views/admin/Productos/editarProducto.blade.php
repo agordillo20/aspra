@@ -78,7 +78,7 @@
                         </div>
                         <div class="text-center">
                             <button class="btn-outline-primary"
-                                    onclick="actualizarDescripcion();document.getElementById('formulario').submit()">
+                                    onclick="actualizarDescripcion({{$producto->id_descripcion}});document.getElementById('formulario').submit();">
                                 Actualizar
                             </button>
                             <button onclick="borrar()" class="btn-outline-secondary">Borrar Producto</button>
@@ -132,8 +132,7 @@
         });
 
         function borrar() {
-            var alerta = confirm("¿Estas seguro que desea borrar el producto?");
-            if (alerta) {
+            if (confirm("¿Estas seguro que desea borrar el producto?")) {
                 document.getElementById("formularioBorrar").submit();
             }
         }
@@ -198,7 +197,7 @@
             $('.contenedor-inputs').append(borrar);
         }
 
-        function actualizarDescripcion() {
+        function actualizarDescripcion(id) {
             var url = '/admin/update/descripcion';
             var data = [];
             for (var i = 0; i < array.length; i++) {
@@ -208,12 +207,9 @@
                 type: 'post',
                 url: url,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                data: {'array': JSON.stringify(data)},
-                success: function (data) {
+                data: {'array': data, id: id},
+                success: function () {
 
-                },
-                error: function () {
-                    console.log("error en la peticion ajax");
                 }
             });
         }

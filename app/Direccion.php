@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Direccion extends Model
 {
-    protected $fillable = ['domicilio', 'localidad', 'provincia', 'codigo_postal', 'pais'];
+    protected $fillable = ['domicilio', 'localidad', 'provincia', 'cod_postal', 'pais'];
+    protected $table = 'direcciones';
 
     public function usuario()
     {

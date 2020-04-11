@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Categoria;
 use App\descripcion;
+use App\Fabricante;
 use App\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class adminController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('admin');
@@ -118,7 +120,7 @@ class adminController extends Controller
         $array = array();
         foreach ($caracteristicas as $c) {
             $nombre = $c->COLUMN_NAME;
-            if ($categoria->$nombre != null && $nombre != "id" && $nombre != "nombre") {
+            if ($categoria->$nombre != null && $nombre != "id" && $nombre != "nombre" && $nombre != "created_at" && $nombre != "updated_at") {
                 array_push($array, $categoria->$nombre);
             }
         }
@@ -138,5 +140,16 @@ class adminController extends Controller
             }
         }
         return response()->json($array);
+    }
+
+    public function editFabricante(Request $request)
+    {
+        return view('/admin/Fabricantes/editFabricante', ['fabricante' => Fabricante::find($request->input('id'))]);
+    }
+
+    public function editCategoria(Request $request)
+    {
+        $campos = DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'categorias'");
+        return view('/admin/Categorias/editCategoria', ['categoria' => Categoria::find($request->input('id')), 'campos' => $campos]);
     }
 }

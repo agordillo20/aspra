@@ -7,10 +7,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'ASPRA') }}</title>
-
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.7/uuid.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/Functions.js') }}" defer></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
@@ -121,27 +122,33 @@
 
     </main>
 </div>
-<div class="carrito text-center" id="carrito">
-    <div class="compra">
-        @php
-            $precio=0;
-                $i=0;
-        @endphp
-        @foreach(\App\Producto::all() as $p)
+<div class="carrito ocultar text-center" id="carrito">
+    @php
+        $i=0;
+        $precio=0;
+        @session_start();
+        $carrito;
+        if (isset($_SESSION['carrito'])){
+            $carrito = $_SESSION['carrito'];
+        }else{
+            $_SESSION['carrito'] = array();
+            $carrito = $_SESSION['carrito'];
+        }
+    @endphp
+
+    <div class="compra" id="carritoCentro">@foreach($carrito as $c)
             <div class="row pt-3 px-3" id="column{{$i}}">
-                <div class="col-1"><img src="{{$p->foto}}" style="width: 30px;height: 30px"></div>
-                <div class="col-2">x 1</div>
-                <div class="col-5">{{$p->nombre}}</div>
-                <div class="col-1" id="precio{{$i}}">{{$p->precio_venta}}€</div>
-                @php($precio+=$p->precio_venta)
-                <div class="col"><i id="{{$i}}" class="far fa-minus-square" onclick="quitar(this.id)"></i></div>
-                @php($i++)
-            </div>
-        @endforeach
-    </div>
+                <div class="col-1"><img src="{{$c[1]['foto']}}" style="width: 30px;height:30px"></div>
+                <div class="col-2" id="cantidad{{$i}}">x {{$c[0]}}</div>
+                <div class="col-5">{{$c[1]['nombre']}}</div>
+                <div class="col-1" id="precio{{$i}}">{{$c[1]['precio_venta']}}€
+                </div>@php($precio+=$c[1]['precio_venta']*$c[0])
+                <div class="col">@php($producto=json_encode($c[1]))<i id="{{$i}}" class="far fa-minus-square"
+                                                                      onclick="quitar(this.id,{{$producto}})"></i></div>
+                <div hidden>{{$c[1]['cod_producto']}}</div>@php($i++)</div>@endforeach</div>
     <div class="row">
         <div class="col-7 text-right">
-            <button class="btn btn-link" id="finish">Terminar compra</button>
+            <button class="btn btn-link" id="finish" disabled="disabled">Terminar compra</button>
         </div>
         <div class="col-4 my-2 text-left" id="precio">Total {{$precio}}€</div>
     </div>
@@ -169,18 +176,6 @@
             var estado = document.getElementById('navbar');
             estado.className = 'nv';
         }
-    }
-
-    function quitar(id) {
-        var precio = parseInt($('#precio' + id).text().slice(0, -1), 10);
-        var total = parseInt($('#precio').text().split(' ')[1].slice(0, -1), 10);
-        var nuevoTotal = total - precio;
-        if (nuevoTotal === 0) {
-            $('#finish').attr('disabled', true);
-        }
-        $('#precio').text("Total " + nuevoTotal + "€");
-        $('#column' + id).remove();
-        //eliminar del carrito
     }
 </script>
 </body>

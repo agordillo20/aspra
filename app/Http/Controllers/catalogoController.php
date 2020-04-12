@@ -21,8 +21,13 @@ class catalogoController extends Controller
      */
     public function catalogo(Request $request)
     {
+        //Lineas necesarias para mantener el carrito y además funcionen correctamente los filtros
         session_start();
+        $carrito = $_SESSION['carrito'];
         session_destroy();
+        session_start();
+        $_SESSION['carrito'] = $carrito;
+
         $idCategoria = $request->get('id');//Cambiando este valor se modifica la vista entera,asi como sus filtros
         $categoria = Categoria::find($idCategoria);
         $nombreCategoria = $categoria->nombre;

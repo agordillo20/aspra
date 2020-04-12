@@ -76,6 +76,10 @@ Route::post('/admin/update/fabricante', 'fabricanteController@update');
 Route::post('/catalogo/filtrar/productos', 'catalogoController@filtrar');
 Route::post('/catalogo/filtrar1/productos', 'catalogoController@filtrar1');
 
+//Carrito
+Route::post('/carrito/add', 'carritoController@add');
+Route::post('/carrito/delete', 'carritoController@delete');
+
 Auth::routes(['verify' => true]);
 
 

@@ -51,10 +51,10 @@
     </div>
     <script type="application/javascript">
         function addCarrito(producto) {
+            add(producto);
             $('#foto').toggleClass("volar");
             setTimeout(function () {
                 $('#foto').toggleClass("volar");
-                //todo:agregar al carrito
             }, 1500);
         }
     </script>

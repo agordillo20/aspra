@@ -35,9 +35,13 @@
                                 <pre class="font-weight-bold"
                                      style="color: red;">{{$producto->stock_actual}} Restantes</pre>
                                 Precio : {{$producto->precio_venta}} €<br>
-                                <button class="btn btn-outline-primary" style="margin-top: .25em"
-                                        onclick="addCarrito({{$producto}})">Añadir al Carrito
-                                </button>
+                                <div class="row justify-content-center mt-1">
+                                    <button class="btn btn-outline-primary col-4 mr-1"
+                                            onclick="addCarrito({{$producto}})">Añadir al Carrito
+                                    </button>
+                                    <input type="number" min="0" max="{{$producto->stock_actual}}" name="cantidad"
+                                           class="form-control col-2" value="1">
+                                </div>
                             </div>
 
                         </div>
@@ -51,7 +55,7 @@
     </div>
     <script type="application/javascript">
         function addCarrito(producto) {
-            add(producto);
+            add(producto, $('input[name="cantidad"]').val());
             $('#foto').toggleClass("volar");
             setTimeout(function () {
                 $('#foto').toggleClass("volar");

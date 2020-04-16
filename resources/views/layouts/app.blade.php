@@ -12,6 +12,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/Functions.js') }}" defer></script>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AbrAYFruSBuCSELV4fSTmSHHwnVNC96d2R2kr1arC4Ky_7BgLztxHPdncy96rWTgHVY7EwUZlywj0aan&currency=EUR"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
@@ -23,6 +25,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/finalizarCompra.css') }}" rel="stylesheet">
     <link href="{{ asset('css/menu.css') }}" rel="stylesheet">
     <link href="{{ asset('css/popUp.css') }}" rel="stylesheet">
     <link href="{{ asset('css/perfil.css') }}" rel="stylesheet">
@@ -42,10 +45,10 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <button class="btnIm" onclick="mostrar()"></button>
+                        <i class="fas fa-bars btnIm" onclick="mostrar()"></i>
                     </li>
                     <li>
-                        <a id="logo" class="navbar-brand text-white" href="{{ url('/') }}">
+                        <a id="logo" class="navbar-brand" href="{{ url('/') }}">
                             <img src="{{URL::asset('images/logo.png')}}" alt="no encontrada">
                         </a>
                     </li>
@@ -63,7 +66,7 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
                     <li class="nav-item">
-                        <i class="fas fa-shopping-cart"
+                        <i class="fas fa-shopping-cart" id="car"
                            style="font-size: 25px;padding-top: .4em;padding-right: .5em;cursor: pointer"
                            onclick="carrito()"></i>
                     </li>
@@ -90,10 +93,7 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/perfil">Perfil - {{Auth::user()->name}}</a>
                                 <a class="dropdown-item" href="#"
-                                   onclick="
-                                event.preventDefault();
-                                document.getElementById('logout-form').submit();
-                                ">{{ __('Salir') }}</a>
+                                   onclick="salir()">{{ __('Salir') }}</a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                       style="display: none;">
                                     @csrf
@@ -148,14 +148,18 @@
                 <div hidden>{{$c[1]['cod_producto']}}</div>@php($i++)</div>@endforeach</div>
     <div class="row">
         <div class="col-7 text-right">
-            <button class="btn btn-link" id="finish" disabled="disabled">Terminar compra</button>
+            <button class="btn btn-link" id="finish" disabled="disabled" onclick="location.href='{{route('comprar')}}'">
+                Terminar compra
+            </button>
         </div>
         <div class="col-4 my-2 text-left" id="precio">Total {{$precio}}€</div>
     </div>
-
-
 </div>
 <script type="application/javascript">
+    function salir() {
+        $('#logout-form').submit();
+    }
+
     function carrito() {
         $('#carrito').toggleClass('ocultar');
     }

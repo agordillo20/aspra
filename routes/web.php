@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 //Rutas de users
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/catalogo', 'catalogoController@catalogo');
@@ -45,6 +46,7 @@ Route::post('/admin/editar/obtenerCampos', 'adminController@obtener');
 Route::post('/admin/editar/obtenerValores', 'adminController@obtener1');
 Route::post('/admin/editar/fabricante', 'adminController@editFabricante');
 Route::post('/admin/editar/categoria', 'adminController@editCategoria');
+Route::post('/admin/editar/Transportistas', 'adminController@editTransportistas');
 
 //Productos
 Route::get('/admin/add/Productos', 'productoController@add');
@@ -65,6 +67,13 @@ Route::get('/admin/list/Categorias', 'categoriaController@show');
 Route::post('/admin/delete/categoria', 'categoriaController@delete');
 Route::post('/admin/update/categoria', 'categoriaController@update');
 
+//Transportistas
+Route::get('/admin/add/Transportistas', 'transportistaController@add');
+Route::post('/admin/add/Tranportistas1', 'transportistaController@add1');
+Route::get('/admin/list/Transportistas', 'transportistaController@show');
+Route::post('/admin/delete/Transportistas', 'transportistaController@delete');
+Route::post('/admin/update/Transportistas', 'transportistaController@update');
+
 //Fabricantes
 Route::get('/admin/add/Fabricantes', 'fabricanteController@add');
 Route::post('/admin/add/fabricantes', 'fabricanteController@add1');
@@ -79,6 +88,11 @@ Route::post('/catalogo/filtrar1/productos', 'catalogoController@filtrar1');
 //Carrito
 Route::post('/carrito/add', 'carritoController@add');
 Route::post('/carrito/delete', 'carritoController@delete');
+Route::post('/carrito/finalizar/delete', 'carritoController@delete1');
+Route::get('/carrito/terminarCompra', 'carritoController@comprar')->name('comprar');
+Route::post('/carrito/user/comprobar', 'carritoController@comprobar');
+Route::get('/pago', 'carritoController@pago');
+
 
 Auth::routes(['verify' => true]);
 

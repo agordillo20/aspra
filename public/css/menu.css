@@ -14,6 +14,7 @@
 }
 
 .menu {
+    padding-top: 1em;
     position: fixed;
     font-family: 'Abril Fatface', cursive;
     background-color: #ffecbe;
@@ -24,9 +25,10 @@
 }
 
 .menu a {
+    text-transform: capitalize;
     transition: all .5s;
     display: block;
-    color: #ff0030;
+    color: #1b1e21;
     text-decoration: none;
     width: 100%;
 }
@@ -46,9 +48,14 @@
 .btnIm {
     margin-top: 10px;
     margin-right: 5em;
-    background-image: url("../images/btn.png");
-    width: 35px;
-    height: 35px;
+    font-size: 30px;
+    padding: 4px;
+}
+
+.btnIm:hover {
+    cursor: pointer;
+    border-radius: 6px;
+    border-style: solid;
 }
 
 .options {

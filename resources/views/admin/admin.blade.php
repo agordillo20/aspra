@@ -19,6 +19,11 @@
                                 onclick="opciones(this.id)">Categorias
                         </button>
                     </li>
+                    <li class="nav-item">
+                        <button id="4" class="nav-link btn-outline-primary font-weight-bold"
+                                onclick="opciones(this.id)">Transportistas
+                        </button>
+                    </li>
                 </ul>
             </div>
             <div class="card-body" id="contenedor">

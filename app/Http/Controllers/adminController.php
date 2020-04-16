@@ -6,6 +6,7 @@ use App\Categoria;
 use App\descripcion;
 use App\Fabricante;
 use App\Producto;
+use App\Transportista;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -151,5 +152,10 @@ class adminController extends Controller
     {
         $campos = DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'categorias'");
         return view('/admin/Categorias/editCategoria', ['categoria' => Categoria::find($request->input('id')), 'campos' => $campos]);
+    }
+
+    public function editTransportistas(Request $request)
+    {
+        return view('/admin/Transportistas/editTransportistas', ['transportista' => Transportista::find($request->input('id'))]);
     }
 }

@@ -17,6 +17,8 @@ class CreateFacturas extends Migration
             $table->id();
             $table->bigInteger('id_producto')->unsigned();
             $table->bigInteger('id_pedido')->unsigned();
+            $table->integer('cantidad');
+            $table->decimal('precio');
             $table->foreign('id_pedido')->references('id')->on('pedidos');
             $table->foreign('id_producto')->references('id')->on('productos');
             $table->timestamps();

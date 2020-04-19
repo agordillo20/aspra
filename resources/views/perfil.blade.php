@@ -23,8 +23,7 @@
                                         <div class="col-3">
                                             <div class="pedidos text-center">
                                                 PEDIDOS
-                                                <p>{{$pedidos}}</p>
-                                                {{--                                                TODO:Posible mejora,implementar listado con los pedidos realizados al hacer click en el numero de pedidos--}}
+                                                <p class="listaPedidos" onclick="listaPedidos()">{{$pedidos}}</p>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -253,12 +252,41 @@
             </div>
         </div>
     </div>
-
+    {{--    Listado de pedidos--}}
+    <div class="lista oculto" id="listaPedidos">
+        <div class="cen">
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>Fecha</td>
+                    <td>Factura</td>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach(\App\Pedido::all()->where('id_usuario','=',\Illuminate\Support\Facades\Auth::id()) as $p)
+                    <tr>
+                        <td>{{$p->fecha_pedido}}</td>
+                        <td><i id="{{$p->id}}" class="fas fa-file-pdf" onclick="factura(this.id)"></i></td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <form action="/pdf" method="post" id="factura">
+        @csrf
+        <input type="hidden" name="idFactura">
+    </form>
     {{--    javascript y jquery--}}
     <script type="application/javascript">
         $(document).ready(function () {
             $('#alerta').hide();
         });
+
+        function factura(id) {
+            $('input[name="idFactura"]').val(id);
+            $('#factura').submit();
+        }
 
         function addDireccion() {
             var pais = $('input[name="pais"]').val();
@@ -371,6 +399,10 @@
                     console.log("error en la peticion ajax");
                 }
             });
+        }
+
+        function listaPedidos() {
+            $('#listaPedidos').toggleClass('oculto');
         }
     </script>
 @endsection

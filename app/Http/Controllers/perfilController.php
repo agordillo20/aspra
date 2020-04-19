@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Direccion;
+use App\Factura;
+use App\Pedido;
+use App\Transportista;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -111,5 +114,13 @@ class perfilController extends Controller
         $direccion->pais = $request->input('pais');
         $direccion->save();
         return response()->json();
+    }
+
+    public function imprimirfactura(Request $request)
+    {
+        $pedido = Pedido::find($request->input('idFactura'));
+        $facturas = Factura::all()->where('id_pedido', '=', $pedido->id);
+        $pdf = \PDF::loadView('pdf', ['cod_factura' => '000' . $pedido->id, 'direccion' => Direccion::find($pedido->id_direccion), 'transportista' => Transportista::find($pedido->id_transportista), 'factura' => $facturas]);
+        return $pdf->download('factura' . $pedido->fecha_pedido . '.pdf');
     }
 }

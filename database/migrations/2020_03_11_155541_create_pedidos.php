@@ -23,6 +23,7 @@ class CreatePedidos extends Migration
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->foreign('id_direccion')->references('id')->on('direcciones');
             $table->foreign('id_transportista')->references('id')->on('transportistas');
+            $table->decimal('total');
             $table->timestamps();
         });
     }

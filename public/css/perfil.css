@@ -18,6 +18,7 @@
     width: 40px;
     height: 40px;
     border-radius: 15px;
+    border: 0;
     background-color: lightgrey;
 }
 
@@ -157,5 +158,9 @@
 }
 
 .Editardireccion.hide {
+    visibility: hidden;
+}
+
+.lista.oculto {
     visibility: hidden;
 }

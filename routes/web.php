@@ -92,8 +92,16 @@ Route::post('/carrito/finalizar/delete', 'carritoController@delete1');
 Route::get('/carrito/terminarCompra', 'carritoController@comprar')->name('comprar');
 Route::post('/carrito/user/comprobar', 'carritoController@comprobar');
 Route::get('/pago', 'carritoController@pago');
+Route::post('payment', array(
+    'as' => 'payment',
+    'uses' => 'PaypalController@postPayment',
+));
 
-
+Route::get('payment/status', array(
+    'as' => 'payment.status',
+    'uses' => 'PaypalController@getPaymentStatus',
+));
+Route::post('/pdf', 'perfilController@imprimirfactura');
 Auth::routes(['verify' => true]);
 
 

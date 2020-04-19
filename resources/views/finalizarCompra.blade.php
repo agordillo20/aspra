@@ -104,27 +104,32 @@
         <div class="opcionesCentro">
             <div class="row justify-content-end mr-3 mt-2"><i class="fas fa-times" onclick="mostrarOpciones()"></i>
             </div>
-            <div class="row mt-2 mx-2">
-                <div class="col">
-                    <label for="direccion">Dirección de envio</label>
-                    <select name="direccion" required class="custom-select">
-                        @foreach(\App\Direccion::all()->where('id_usuario','=',\Illuminate\Support\Facades\Auth::id()) as $d)
-                            <option value="{{$d['domicilio']}}">{{$d['domicilio']}}</option>
-                        @endforeach
-                    </select>
+            <form action="/payment" method="post">
+                @csrf
+                <div class="row mt-2 mx-2">
+                    <div class="col">
+                        <label for="direccion">Dirección de envio</label>
+                        <select name="direccion" required class="custom-select">
+                            @foreach(\App\Direccion::all()->where('id_usuario','=',\Illuminate\Support\Facades\Auth::id()) as $d)
+                                <option value="{{$d['domicilio']}}">{{$d['domicilio']}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="transportista">Método de envio</label>
+                        <select name="transportista" required class="custom-select">
+                            @foreach(\App\Transportista::all() as $t)
+                                <option value="{{$t->razon_social}}">{{$t->razon_social}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="col">
-                    <label for="transportista">Método de envio</label>
-                    <select name="transportista" required class="custom-select">
-                        @foreach(\App\Transportista::all() as $t)
-                            <option value="{{$t->razon_social}}">{{$t->razon_social}}</option>
-                        @endforeach
-                    </select>
+                <div class="row justify-content-center mt-5">
+                    <button class="btn btn-outline-primary" type="submit"><i class="fab fa-cc-paypal"
+                                                                             style="font-size: 40px"></i></button>
                 </div>
-            </div>
-            <div class="row justify-content-center mt-5">
-                <button class="btn btn-outline-primary" onclick="location.href='/pago'">Pagar</button>
-            </div>
+            </form>
+
         </div>
     </div>
     <script type="application/javascript">

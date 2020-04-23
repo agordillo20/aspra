@@ -28,7 +28,7 @@ class catalogoController extends Controller
         session_start();
         $_SESSION['carrito'] = $carrito;
 
-        $idCategoria = $request->get('id');//Cambiando este valor se modifica la vista entera,asi como sus filtros
+        $idCategoria = $request->input('id');//Cambiando este valor se modifica la vista entera,asi como sus filtros
         $categoria = Categoria::find($idCategoria);
         $nombreCategoria = $categoria->nombre;
         $arrayCamposCategoria = array();
@@ -79,7 +79,7 @@ class catalogoController extends Controller
                 unset($arrayFinal[$r]);
             }
         }
-        return view('catalogo', ['categorias' => $arrayCamposCategoria, 'valores' => $arrayFinal, 'productos' => Producto::all()->where('id_categoria', '=', $idCategoria), 'id_categoria' => $idCategoria, 'nombre' => $nombreCategoria]);
+        return view('catalogo', ['categorias' => $arrayCamposCategoria, 'valores' => $arrayFinal, 'productos' => Producto::all()->where('id_categoria', '=', $idCategoria)->where('activo', '=', '1'), 'id_categoria' => $idCategoria, 'nombre' => $nombreCategoria]);
     }
 
     public function filtrar(Request $request)
@@ -121,7 +121,7 @@ class catalogoController extends Controller
             }
         }
 
-        $sql = "select p.* from productos p inner join descripcion d on p.id_descripcion=d.id where p.id_categoria=" . $id_categoria;
+        $sql = "select p.* from productos p inner join descripcion d on p.id_descripcion=d.id where p.id_categoria=" . $id_categoria . " and activo=1";
         foreach ($array as $items => $value) {
             $i = 0;
             foreach ($value as $v => $z) {
@@ -193,7 +193,7 @@ class catalogoController extends Controller
 
     public function showUser(Request $request)
     {
-        $id = $request->get('id');
+        $id = $request->input('id');
         $producto = Producto::find($id);
         $descripcion = descripcion::find($producto->id_descripcion);
         $arrayCamposDescripcion = array();

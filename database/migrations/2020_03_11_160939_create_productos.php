@@ -27,8 +27,9 @@ class CreateProductos extends Migration
             $table->string('foto');
             $table->boolean('rebajado');
             $table->double('precio_anterior');
+            $table->boolean('activo');
             $table->timestamps();
-            $table->foreign('id_descripcion')->references('id')->on('descripcion');
+            $table->foreign('id_descripcion')->references('id')->on('descripcion')->cascadeOnDelete();
             $table->foreign('id_fabricante')->references('id')->on('fabricantes');
             $table->foreign('id_categoria')->references('id')->on('categorias');
         });

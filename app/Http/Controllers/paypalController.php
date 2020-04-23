@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Direccion;
 use App\Factura;
+use App\Mail\EnviarFactura;
 use App\Order;
 use App\OrderItem;
 use App\Pedido;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
@@ -141,7 +143,8 @@ class paypalController extends BaseController
         $result = $payment->execute($execution, $this->_api_context);
         if ($result->getState() == 'approved') {
             $this->saveOrder();
-            return Redirect::route('home')->with('message', 'Compra realizada de forma correcta');
+            $this->sendFactura();
+            return Redirect::route('home')->with('message', 'Compra realizada de forma correcta, se ha enviado un correo con la factura,además puede consultarse desde mi perfil,gracias por confiar en nosotros');
         }
         return Redirect::route('home')->with('message', 'La compra fue cancelada');
     }
@@ -170,5 +173,10 @@ class paypalController extends BaseController
             $factura->save();
         }
         session_destroy();
+    }
+
+    private function sendFactura()
+    {
+        Mail::to(Auth::user())->send(new EnviarFactura(Pedido::all()->last()));
     }
 }

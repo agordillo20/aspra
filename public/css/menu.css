@@ -24,7 +24,7 @@
     height: 100%;
 }
 
-.menu a {
+.menu button {
     text-transform: capitalize;
     transition: all .5s;
     display: block;
@@ -33,7 +33,7 @@
     width: 100%;
 }
 
-.menu a:hover {
+.menu button:hover {
     margin-left: 1em;
 }
 

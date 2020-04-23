@@ -36,6 +36,7 @@ class productoController extends Controller implements interface_methods
             }
         } catch (\Exception $e) {
         }
+        $producto->activo = true;
         $producto->precio_venta = $request->input('precio_venta');
         $producto->precio_compra = $request->input('precio_compra');
         $producto->id_descripcion = DB::table('descripcion')->select('id')->limit(1)->orderBy('id', 'desc')->get()[0]->id;
@@ -141,14 +142,14 @@ class productoController extends Controller implements interface_methods
         //TODO:testear
         $id = $request->input('idProducto');
         $producto = Producto::find($id);
-        descripcion::destroy($producto->id_descripcion);
-        Producto::destroy($id);
+        $producto->activo = false;
+        $producto->save();
         return redirect('/admin/list/Productos');
     }
 
     public function show()
     {
-        $productos = Producto::all()->all();
+        $productos = Producto::all()->where('activo', '=', '1')->all();
         return view('/admin/Productos/listProductos', ['productos' => $productos]);
     }
 
@@ -157,5 +158,8 @@ class productoController extends Controller implements interface_methods
         return view('admin/Productos/ofertarProductos');
     }
 
-
+    public function bajas()
+    {
+        return response()->json(array_values(Producto::all()->where('activo', '=', '0')->all()));
+    }
 }

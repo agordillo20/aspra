@@ -121,10 +121,12 @@ function sustituir(producto, cantidad) {
         if (producto.cod_producto === item.lastChild.textContent) {
             anterior_cantidad = parseInt(item.childNodes[1].childNodes[0].textContent.split(' ')[1], 10);
             anterior_cantidad += cantidad;
-            item.childNodes[1].childNodes[0].textContent = "x " + anterior_cantidad;
-            nuevo_precio = producto.precio_venta * anterior_cantidad;
-            item.childNodes[3].childNodes[0].textContent = nuevo_precio + "€";
-            total += nuevo_precio;
+            if (anterior_cantidad <= producto.stock_actual) {
+                item.childNodes[1].childNodes[0].textContent = "x " + anterior_cantidad;
+                nuevo_precio = producto.precio_venta * anterior_cantidad;
+                item.childNodes[3].childNodes[0].textContent = nuevo_precio + "€";
+                total += nuevo_precio;
+            }
         }
     });
     $('#precio').text("Total " + total + "€");

@@ -110,7 +110,10 @@
         <nav class="nv" id="navbar">
             <ul class="menu">
                 @foreach(\Illuminate\Support\Facades\DB::select('select DISTINCT categorias.* from categorias inner join productos ON categorias.id=productos.id_categoria') as $c)
-                    <li><a href="/catalogo?id={{$c->id}}">{{$c->nombre}}</a></li>
+                    <li>
+                        <button class="btn text-left btn-link"
+                                onclick="visualizarCatalogo({{$c->id}})">{{$c->nombre}}</button>
+                    </li>
                 @endforeach
             </ul>
         </nav>
@@ -119,7 +122,10 @@
                 @yield('content')
             </div>
         </div>
-
+        <form method="post" action="/catalogo" id="formCatalogo">
+            @csrf
+            <input type="hidden" name="id" id="data">
+        </form>
     </main>
 </div>
 <div class="carrito ocultar text-center" id="carrito">
@@ -156,6 +162,11 @@
     </div>
 </div>
 <script type="application/javascript">
+    function visualizarCatalogo(id) {
+        $('#data').val(id);
+        $('#formCatalogo').submit();
+    }
+
     function salir() {
         $('#logout-form').submit();
     }

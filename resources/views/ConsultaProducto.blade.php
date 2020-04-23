@@ -39,7 +39,7 @@
                                     <button class="btn btn-outline-primary col-4 mr-1"
                                             onclick="addCarrito({{$producto}})">Añadir al Carrito
                                     </button>
-                                    <input type="number" min="0" max="{{$producto->stock_actual}}" name="cantidad"
+                                    <input type="number" min="1" max="{{$producto->stock_actual}}" name="cantidad"
                                            class="form-control col-2" value="1">
                                 </div>
                             </div>
@@ -55,11 +55,34 @@
     </div>
     <script type="application/javascript">
         function addCarrito(producto) {
-            add(producto, $('input[name="cantidad"]').val());
-            $('#foto').toggleClass("volar");
-            setTimeout(function () {
-                $('#foto').toggleClass("volar");
-            }, 1500);
+            debugger
+            if (compr(producto)) {
+                if (producto.stock_actual >= $('input[name="cantidad"]').val() && $('input[name="cantidad"]').val() > 0) {
+                    add(producto, $('input[name="cantidad"]').val());
+                    $('#foto').toggleClass("volar");
+                    setTimeout(function () {
+                        $('#foto').toggleClass("volar");
+                    }, 1500);
+                }
+            }
+        }
+
+        function compr(producto) {
+            var can = false;
+            var articulos = document.getElementById("carritoCentro");
+            if (articulos.childNodes.length > 0) {
+                articulos.childNodes.forEach(function (item) {
+                    if (producto.cod_producto === item.lastChild.textContent) {
+                        var cantidad = parseInt(item.childNodes[1].childNodes[0].textContent.split(' ')[1], 10);
+                        if (cantidad < producto.stock_actual) {
+                            can = true;
+                        }
+                    }
+                });
+            } else {
+                can = true;
+            }
+            return can;
         }
     </script>
 @endsection

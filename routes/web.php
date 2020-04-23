@@ -18,9 +18,9 @@ Auth::routes();
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/catalogo', 'catalogoController@catalogo');
+Route::post('/catalogo', 'catalogoController@catalogo');
 Route::get('/registrado', 'RedireccionController@redireccion')->name('redireccion');
-Route::get('/show', 'catalogoController@showUser')->name('ConsultaProducto');
+Route::post('/show', 'catalogoController@showUser')->name('ConsultaProducto');
 
 //Rutas relacionadas con el perfil del user
 Route::get('/perfil', 'perfilController@perfil');
@@ -59,6 +59,7 @@ Route::post('/admin/editar/producto1', 'productoController@update1')->name('edit
 Route::post('/admin/borrar/producto', 'productoController@delete')->name('borrar');
 Route::get('/admin/list/Productos', 'productoController@show');
 Route::get('/admin/ofertar/Productos', 'productoController@ofertar');
+Route::post('/admin/list/productos/baja', 'productoController@bajas');
 
 //Categorias
 Route::get('/admin/add/Categorias', 'categoriaController@add');

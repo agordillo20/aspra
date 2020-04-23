@@ -142,7 +142,13 @@
                     if (data === "") {
                         mostrarOpciones();
                     } else {
-                        alert(data);
+                        if (confirm(data)) {
+                            if (data === "Se debe iniciar sesion para comprar") {
+                                location.href = "/login";
+                            } else {
+                                location.href = "/perfil";
+                            }
+                        }
                     }
                 }
             });

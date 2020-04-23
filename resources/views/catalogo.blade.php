@@ -27,7 +27,12 @@
                                          style="height: 230px;width: 200px;"/>
                                 </div>
                                 <div class="card-footer text-center" style="margin-bottom: 3em;">
-                                    <a href="/show?id={{$p->id}}" class="font-weight-bold">{{$p->nombre}}</a>
+                                    <button class="btn btn-link font-weight-bold"
+                                            onclick="visualizarProducto({{$p->id}})">{{$p->nombre}}</button>
+                                    <form method="post" action="/show" id="formShow">
+                                        @csrf
+                                        <input type="hidden" name="id" id="dato">
+                                    </form>
                                 </div>
                             </div>
                         @endforeach
@@ -65,6 +70,11 @@
     </div>
 
     <script type="application/javascript">
+        function visualizarProducto(id) {
+            $('#dato').val(id);
+            $('#formShow').submit();
+        }
+
         var j = 0;
         var arrayNombres = [];
         $(document).ready(function () {

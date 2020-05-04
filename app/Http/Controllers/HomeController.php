@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use Telegram\Bot\Laravel\Facades\Telegram;
+
 class HomeController extends Controller
 {
     /**

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 /*
 |--------------------------------------------------------------------------

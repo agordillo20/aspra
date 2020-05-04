@@ -81,7 +81,7 @@
                                     onclick="actualizarDescripcion({{$producto->id_descripcion}});document.getElementById('formulario').submit();">
                                 Actualizar
                             </button>
-                            <button onclick="borrar()" class="btn-outline-secondary">Borrar Producto</button>
+                            <button onclick="borrar()" class="btn-outline-secondary">Dar de baja el producto</button>
                         </div>
                         <form method="post" action="{{route('borrar')}}" id="formularioBorrar">
                             @csrf

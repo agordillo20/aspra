@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Categoria;
 use App\descripcion;
+use App\Fabricante;
 use App\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,7 @@ class catalogoController extends Controller
                 array_push($arrayCamposCategoria, str_replace('_', ' ', $categoria->$nombre));
             }
         }
-        $productos = DB::select('SELECT id_descripcion FROM productos WHERE id_categoria=' . $idCategoria);
+        $productos = DB::select('SELECT id_descripcion FROM productos WHERE id_categoria=' . $idCategoria.' and activo=1');
         $arrayDescripciones = array();
         $arrayCamposDescripcion = array();
         $camposDescripcion = DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'descripcion'");
@@ -79,7 +80,14 @@ class catalogoController extends Controller
                 unset($arrayFinal[$r]);
             }
         }
-        return view('catalogo', ['categorias' => $arrayCamposCategoria, 'valores' => $arrayFinal, 'productos' => Producto::all()->where('id_categoria', '=', $idCategoria)->where('activo', '=', '1'), 'id_categoria' => $idCategoria, 'nombre' => $nombreCategoria]);
+        $produc = Producto::all()->where('id_categoria', '=', $idCategoria)->where('activo', '=', '1');
+        $marcas = array();
+        foreach ($produc as $pr){
+            if (!in_array(Fabricante::find($pr->id_fabricante)->razon_social,$marcas)){
+                array_push($marcas,Fabricante::find($pr->id_fabricante)->razon_social);
+            }
+        }
+        return view('catalogo', ['categorias' => $arrayCamposCategoria, 'valores' => $arrayFinal, 'productos' => $produc, 'id_categoria' => $idCategoria, 'nombre' => $nombreCategoria,'marcas'=>$marcas]);
     }
 
     public function filtrar(Request $request)
@@ -126,12 +134,23 @@ class catalogoController extends Controller
             $i = 0;
             foreach ($value as $v => $z) {
                 foreach ($z as $x) {
-                    if ($i > 0) {
-                        $sql = $sql . " OR d." . $arrayCamposDesc[$this->getPos($v, $id_categoria)] . "='" . $x . "'";
-                        $i++;
-                    } else {
-                        $sql = $sql . " and (d." . $arrayCamposDesc[$this->getPos($v, $id_categoria)] . "='" . $x . "'";
-                        $i++;
+                    if ($v=="Marca"){
+                        $id_fabricante = DB::select("select id from fabricantes where razon_social='".$x."'")[0]->id;
+                        if ($i > 0) {
+                            $sql = $sql . " OR p.id_fabricante='" . $id_fabricante . "'";
+                            $i++;
+                        } else {
+                            $sql = $sql . " and (p.id_fabricante='" . $id_fabricante . "'";
+                            $i++;
+                        }
+                    }else{
+                        if ($i > 0) {
+                            $sql = $sql . " OR d." . $arrayCamposDesc[$this->getPos($v, $id_categoria)] . "='" . $x . "'";
+                            $i++;
+                        } else {
+                            $sql = $sql . " and (d." . $arrayCamposDesc[$this->getPos($v, $id_categoria)] . "='" . $x . "'";
+                            $i++;
+                        }
                     }
                 }
                 $sql = $sql . ")";
@@ -165,7 +184,7 @@ class catalogoController extends Controller
                 }
             }
         }
-        $_SESSION['array'] = $array;
+        $_SESSION['array'] = array_values($array);
         return response()->json($arrayNombres);
     }
 
@@ -212,7 +231,7 @@ class catalogoController extends Controller
                 array_push($arrayCamposCategoria, str_replace('_', ' ', $categoria->$nombre));
             }
         }
-        $Nombrecategoria = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->select('categorias.nombre')->get()[0];
+        $Nombrecategoria = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->where('productos.id_categoria','=',$producto->id_categoria)->select('categorias.nombre')->get()[0];
         $fabricante = DB::table('productos')->join('fabricantes', 'productos.id_fabricante', '=', 'fabricantes.id')->select('razon_social')->where('productos.id', '=', $producto->id)->get()[0];
         return view('ConsultaProducto', ['producto' => $producto, 'nombre' => $Nombrecategoria, 'fabricante' => $fabricante, 'camposCategoria' => $arrayCamposCategoria, 'camposDescripcion' => $arrayCamposDescripcion]);
     }

@@ -11,7 +11,7 @@
                         <div class="row">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <input type="search" placeholder="Buscar producto... " id="buscador">
+                                    <input type="search" placeholder="Categoria/codProducto" id="buscador">
                                     <div
                                         style="position: absolute;margin-left: 160px;margin-top: .15em;padding-bottom:.09em;padding-right: .39em;padding-left:.3em;background-color: rgba(5,92,28,0.31)">
                                         <i class="fa fa-search"></i>
@@ -23,6 +23,11 @@
                             <div class="col">
                                 <label>Introduce el pocentaje a rebajar los productos seleccionados</label>
                                 <input type="number" name="porcentaje" min="0" max="100">
+                            </div>
+                            <div class="col">
+                                <label for="fecha_fin">Introduce la fecha y hora que durara la rebaja</label>
+                                <input type="date" id="fecha_fin" name="fecha" class="form-control-sm">
+                                <input type="time" id="fecha_fin" name="hora" class="form-control-sm">
                             </div>
                             <div class="col text-right">
                                 <div id="seg">
@@ -83,11 +88,13 @@
         function aplicar() {
             var porcentaje = $('input[name="porcentaje"]').val();
             var productos = $('select[id="productos"]').val();
+            var fecha = $('input[name=fecha]').val();
+            var hora = $('input[name=hora]').val();
             $.ajax({
                 type: 'post',
                 url: "/admin/aplicar",
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                data: {'porcentaje': porcentaje, 'productos': productos},
+                data: {'porcentaje': porcentaje, 'productos': productos,'fecha':fecha,'hora':hora},
                 success: function (data) {
                     $('#mensaje').text(data).show();
                     setTimeout(function () {

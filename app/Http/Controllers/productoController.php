@@ -139,7 +139,6 @@ class productoController extends Controller implements interface_methods
 
     public function delete(Request $request)
     {
-        //TODO:testear
         $id = $request->input('idProducto');
         $producto = Producto::find($id);
         $producto->activo = false;

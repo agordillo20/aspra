@@ -35,7 +35,7 @@
                                     </span>
                                 @enderror
                                 <div class="col text-center">
-                                    <button type="button" class="btn btn-secondary" onclick="add()" id="btnAdd">Añadir
+                                    <button type="button" class="btn btn-secondary" onclick="addCampos()" id="btnAdd">Añadir
                                     </button>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
         </div>
     </div>
     <script type="application/javascript">
-        function add() {
+        function addCampos() {
             var cantidad = $('#campos').val();
             if (cantidad === "") {
                 cantidad = 0;

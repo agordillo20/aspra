@@ -55,7 +55,6 @@
     </div>
     <script type="application/javascript">
         function addCarrito(producto) {
-            debugger
             if (compr(producto)) {
                 if (producto.stock_actual >= $('input[name="cantidad"]').val() && $('input[name="cantidad"]').val() > 0) {
                     add(producto, $('input[name="cantidad"]').val());

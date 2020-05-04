@@ -7,8 +7,11 @@ use App\descripcion;
 use App\Fabricante;
 use App\Producto;
 use App\Transportista;
+use Carbon\Traits\Date;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 
 class adminController extends Controller
@@ -94,21 +97,24 @@ class adminController extends Controller
     {
         $busqueda = $request->input('texto');
         if (substr_compare('cod_', $busqueda, 0, 4) == 0) {
-            $producto = DB::table('productos')->select("*")->where('cod_producto', 'like', $busqueda . "%")->where('rebajado', '=', '0')->get("*");
+            $producto = DB::table('productos')->select("*")->where('cod_producto', 'like', $busqueda . "%")->where('rebajado', '=', '0')->where('activo','=',1)->get("*");
         } else {
-            $producto = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->select("productos.*")->where('categorias.nombre', 'like', $busqueda . "%")->where('rebajado', '=', '0')->get('productos.*');
+            $producto = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->select("productos.*")->where('categorias.nombre', 'like', $busqueda . "%")->where('rebajado', '=', '0')->where('activo','=',1)->get('productos.*');
         }
         return response()->json($producto);
     }
 
     public function aplicar(Request $request)
     {
+        $fecha = $request->input('fecha');
+        $hora = $request->input('hora');
+        $fecha = $fecha." ".$hora.":00";
         $porcentaje = $request->input('porcentaje');
         $productos = $request->input('productos');
         foreach ($productos as $p) {
             $producto = DB::table('productos')->select("*")->where('cod_producto', '=', $p)->get("*")[0];
             $nuevoPrecio = $producto->precio_venta - $producto->precio_venta * ($porcentaje / 100);
-            DB::table('productos')->where('cod_producto', '=', $p)->update(['rebajado' => '1', 'precio_anterior' => $producto->precio_venta, 'precio_venta' => $nuevoPrecio]);
+            DB::table('productos')->where('cod_producto', '=', $p)->update(['rebajado' => '1', 'precio_anterior' => $producto->precio_venta, 'precio_venta' => $nuevoPrecio,'fecha_fin_rebaja'=>$fecha]);
         }
         return response()->json("oferta aplicada con exito");
     }

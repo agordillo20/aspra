@@ -18,7 +18,7 @@ class CreateProductos extends Migration
             $table->bigInteger('id_categoria')->unsigned();
             $table->bigInteger('id_fabricante')->unsigned();
             $table->bigInteger('id_descripcion')->unsigned();
-            $table->string('cod_producto');
+            $table->string('cod_producto')->unique();
             $table->string('nombre');
             $table->double('precio_venta');
             $table->double('precio_compra');
@@ -26,6 +26,7 @@ class CreateProductos extends Migration
             $table->integer('stock_minimo');
             $table->string('foto');
             $table->boolean('rebajado');
+            $table->dateTime('fecha_fin_rebaja')->nullable(true);
             $table->double('precio_anterior');
             $table->boolean('activo');
             $table->timestamps();

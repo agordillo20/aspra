@@ -151,7 +151,6 @@
                 url: url,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 success: function (data) {
-                    //hacer animación y cambiar el metodo del onclick  y el texto
                     document.getElementById("icon").className = "fas fa-eye-slash float-left";
                     document.getElementById("icon").textContent = " Ocultar productos dados de baja";
                     document.getElementById("icon").onclick = function () {
@@ -240,19 +239,7 @@
                 img.style.width = "70px";
                 img.style.height = "70px";
                 td14.appendChild(img);
-                var td15 = document.createElement("td");
-                td15.className = "align-middle";
-                var a4 = document.createElement("a");
-                a4.href = "#";
-                a4.onclick = function () {
-                    editar(l.id);
-                };
-                var img2 = document.createElement("img");
-                img2.alt = "editar";
-                img2.src = "http://127.0.0.1:8000/images/editar.png";
-                a4.appendChild(img2);
-                td15.appendChild(a4);
-                tr.append(td, td1, td2, td3, td4, td5, td6, td7, td8, td9, td10, td11, td12, td13, td14, td15)
+                tr.append(td, td1, td2, td3, td4, td5, td6, td7, td8, td9, td10, td11, td12, td13, td14);
                 tbody.appendChild(tr);
             });
         }

@@ -105,15 +105,16 @@
             </div>
         </nav>
     </header>
-
     <main class="py-4">
         <nav class="nv" id="navbar">
             <ul class="menu">
-                @foreach(\Illuminate\Support\Facades\DB::select('select DISTINCT categorias.* from categorias inner join productos ON categorias.id=productos.id_categoria') as $c)
+                @foreach(\Illuminate\Support\Facades\DB::select('select categorias.id from categorias ') as $c)
+                    @if(\Illuminate\Support\Facades\DB::table('productos')->join('categorias','categorias.id','=','productos.id_categoria')->where('categorias.id','=',$c->id)->where('activo','=',1)->count()>0){{--comprobacion necesaria para ocultar las categorias que no contengan productos--}}
                     <li>
                         <button class="btn text-left btn-link"
-                                onclick="visualizarCatalogo({{$c->id}})">{{$c->nombre}}</button>
+                                onclick="visualizarCatalogo({{$c->id}})">{{\App\Categoria::find($c->id)->nombre}}</button>
                     </li>
+                    @endif
                 @endforeach
             </ul>
         </nav>
@@ -128,8 +129,29 @@
         </form>
     </main>
 </div>
+@php
+    use App\Producto;
+    class workerThread extends Thread{
+        public function run(){
+            while (true){
+                foreach (Producto::all() as $prd){
+                    if (date('Y-m-d H:i:s')>$prd->fecha_fin_rebaja && $prd->rebajado=="1" && $prd->activo=="1"){
+                        $prd->rebajado=false;
+                        $prd->precio_venta=$prd->precio_anterior;
+                        $prd->fecha_fin_rebaja=null;
+                        $prd->save();
+                        echo "<script>location.reload()</script>";
+                    }
+                }
+            }
+        }
+    }
+    $worker = new workerThread();
+    $worker->start();
+@endphp
 <div class="carrito ocultar text-center" id="carrito">
     @php
+        date_default_timezone_set('Europe/Madrid');
         $i=0;
         $precio=0;
         @session_start();
@@ -141,17 +163,7 @@
             $carrito = $_SESSION['carrito'];
         }
     @endphp
-
-    <div class="compra" id="carritoCentro">@foreach($carrito as $c)
-            <div class="row pt-3 px-3" id="column{{$i}}">
-                <div class="col-1"><img src="{{$c[1]['foto']}}" style="width: 30px;height:30px"></div>
-                <div class="col-2" id="cantidad{{$i}}">x {{$c[0]}}</div>
-                <div class="col-5">{{$c[1]['nombre']}}</div>
-                <div class="col-1" id="precio{{$i}}">{{$c[1]['precio_venta']}}€
-                </div>@php($precio+=$c[1]['precio_venta']*$c[0])
-                <div class="col">@php($producto=json_encode($c[1]))<i id="{{$i}}" class="far fa-minus-square"
-                                                                      onclick="quitar(this.id,{{$producto}})"></i></div>
-                <div hidden>{{$c[1]['cod_producto']}}</div>@php($i++)</div>@endforeach</div>
+    <div class="compra" id="carritoCentro">@foreach($carrito as $c)<div class="row pt-3 px-3" id="column{{$i}}"><div class="col-1"><img src="{{$c[1]['foto']}}" style="width: 30px;height:30px"></div><div class="col-2" id="cantidad{{$i}}">x {{$c[0]}}</div><div class="col-5">{{$c[1]['nombre']}}</div><div class="col-1" id="precio{{$i}}">{{$c[1]['precio_venta']}}€</div>@php($precio+=$c[1]['precio_venta']*$c[0])<div class="col">@php($producto=json_encode($c[1]))<i id="{{$i}}" class="far fa-minus-square" onclick="quitar(this.id,{{$producto}})"></i></div><div hidden>{{$c[1]['cod_producto']}}</div>@php($i++)</div>@endforeach</div>
     <div class="row">
         <div class="col-7 text-right">
             <button class="btn btn-link" id="finish" disabled="disabled" onclick="location.href='{{route('comprar')}}'">
@@ -161,6 +173,7 @@
         <div class="col-4 my-2 text-left" id="precio">Total {{$precio}}€</div>
     </div>
 </div>
+
 <script type="application/javascript">
     function visualizarCatalogo(id) {
         $('#data').val(id);

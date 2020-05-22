@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="height: 100%">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="height: 100%;margin-bottom: 0">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,22 +34,17 @@
 <body style="overflow-x: hidden">
 <div id="app">
     <header class="navbar-header">
-        <nav class="navbar navbar-expand-md navbar-light bg-primary fixed-top" style="z-index: 2">
-
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <nav class="navbar navbar-expand navbar-light bg-primary fixed-top" style="z-index: 2">
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <i class="fas fa-bars btnIm" onclick="mostrar()"></i>
+                        <i class="fas fa-bars btnIm" onclick="mostrar()" style="color: #f6993f"></i>
                     </li>
                     <li>
                         <a id="logo" class="navbar-brand" href="{{ url('/') }}">
-                            <img src="{{URL::asset('images/logo.png')}}" alt="no encontrada">
+                            <img src="{{URL::asset('images/logo.png')}}" alt="no encontrada" class="img-fluid">
                         </a>
                     </li>
                 </ul>
@@ -65,11 +60,13 @@
             <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
+                    @if(!\Illuminate\Support\Facades\Auth::id()==1)
                     <li class="nav-item">
                         <i class="fas fa-shopping-cart" id="car"
                            style="font-size: 25px;padding-top: .4em;padding-right: .5em;cursor: pointer"
                            onclick="carrito()"></i>
                     </li>
+                    @endif
                     @guest
                         <li class="nav-item">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
@@ -87,7 +84,13 @@
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                <img src="{{URL::asset('images/defUser.png')}}" alt="foto por defecto"><span
+                                @if(\Illuminate\Support\Facades\Auth::user()->foto !=null)
+                                    <img src="{{\Illuminate\Support\Facades\Auth::user()->foto}}" alt="foto del usuario"
+                                         style="width: 30px;height: 30px;border-radius: 20px">
+                                @else
+                                    <img src="{{URL::asset('images/defUser.png')}}" alt="foto por defecto">
+                                @endif
+                                <span
                                     class="caret"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -129,26 +132,6 @@
         </form>
     </main>
 </div>
-@php
-    use App\Producto;
-    class workerThread extends Thread{
-        public function run(){
-            while (true){
-                foreach (Producto::all() as $prd){
-                    if (date('Y-m-d H:i:s')>$prd->fecha_fin_rebaja && $prd->rebajado=="1" && $prd->activo=="1"){
-                        $prd->rebajado=false;
-                        $prd->precio_venta=$prd->precio_anterior;
-                        $prd->fecha_fin_rebaja=null;
-                        $prd->save();
-                        echo "<script>location.reload()</script>";
-                    }
-                }
-            }
-        }
-    }
-    $worker = new workerThread();
-    $worker->start();
-@endphp
 <div class="carrito ocultar text-center" id="carrito">
     @php
         date_default_timezone_set('Europe/Madrid');
@@ -175,6 +158,8 @@
 </div>
 
 <script type="application/javascript">
+    var i = 0;
+
     function visualizarCatalogo(id) {
         $('#data').val(id);
         $('#formCatalogo').submit();
@@ -203,6 +188,18 @@
         if (mostrar()) {
             var estado = document.getElementById('navbar');
             estado.className = 'nv';
+        }
+    }
+
+    function moveCarrito() {
+        if (screen.width < 767) {
+            if (i === 0) {
+                $('#carrito').css("margin-top", "14em");
+                i++;
+            } else {
+                $('#carrito').css("margin-top", "-1.3em");
+                i--;
+            }
         }
     }
 </script>

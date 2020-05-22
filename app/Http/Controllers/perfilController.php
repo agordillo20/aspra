@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Direccion;
-use App\Factura;
+use App\Lineapedidos;
 use App\Pedido;
 use App\Transportista;
 use Illuminate\Http\Request;
@@ -17,9 +17,8 @@ class perfilController extends Controller
 {
     public function perfil(Request $request)
     {
-        $user = Auth::user();
-        $pedidos = DB::select("select count(id) as cantidad from pedidos where id_usuario=" . $user->id)[0]->cantidad;
-        return view('perfil', ['usuario' => $user, 'pedidos' => $pedidos]);
+        $pedidos = DB::select("select count(id) as cantidad from pedidos where id_usuario=" . Auth::id())[0]->cantidad;
+        return view('perfil', ['usuario' => Auth::user(), 'pedidos' => $pedidos]);
     }
 
     public function addDireccion(Request $request)
@@ -55,7 +54,7 @@ class perfilController extends Controller
         if ($user->foto != null) {
             $foto = $user->foto;
             $array = explode("/", $foto);
-            $nombreAnterior = "\\" . $array[3] . "\\" . $array[4] . "\\" . $array[5];
+            $nombreAnterior = "\\" . $array[0] . "\\" . $array[1] . "\\" . $array[2];
             File::delete(public_path() . $nombreAnterior);
         }
         $file = $request->file('foto');
@@ -63,7 +62,7 @@ class perfilController extends Controller
         $nombre = time() . "_" . $file->getClientOriginalName();
         //indicamos que queremos guardar un nuevo archivo en el disco local
         Storage::disk('imgusers')->put($nombre, File::get($file));
-        $user->foto = asset("/images/users/" . $nombre);
+        $user->foto = "/images/users/" . $nombre;
         $user->save();
         return redirect('/perfil');
     }
@@ -119,8 +118,9 @@ class perfilController extends Controller
     public function imprimirfactura(Request $request)
     {
         $pedido = Pedido::find($request->input('idFactura'));
-        $facturas = Factura::all()->where('id_pedido', '=', $pedido->id);
+        $facturas = Lineapedidos::all()->where('id_pedido', '=', $pedido->id);
         $pdf = \PDF::loadView('pdf', ['cod_factura' => '000' . $pedido->id, 'direccion' => Direccion::find($pedido->id_direccion), 'transportista' => Transportista::find($pedido->id_transportista), 'factura' => $facturas]);
         return $pdf->download('factura' . $pedido->fecha_pedido . '.pdf');
     }
+
 }

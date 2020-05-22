@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Categoria;
 use App\descripcion;
+use App\Direccion;
 use App\Fabricante;
+use App\Lineapedidos;
+use App\Pedido;
 use App\Producto;
+use App\Transportista;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class productoController extends Controller implements interface_methods
 {
@@ -55,7 +61,7 @@ class productoController extends Controller implements interface_methods
         $nombre = time() . "_" . $file->getClientOriginalName();
         //indicamos que queremos guardar un nuevo archivo en el disco local
         Storage::disk('imgproductos')->put($nombre, File::get($file));
-        $producto->foto = asset("/images/productos/" . $nombre);
+        $producto->foto = "/images/productos/" . $nombre;
         $producto->save();
         return redirect('/admin/add/Productos');
     }
@@ -127,12 +133,12 @@ class productoController extends Controller implements interface_methods
         if ($request->file('foto') !== null) {
             $foto = $producto->foto;
             $array = explode("/", $foto);
-            $nombreAnterior = "\\" . $array[3] . "\\" . $array[4] . "\\" . $array[5];
+            $nombreAnterior = "\\" . $array[1] . "\\" . $array[2] . "\\" . $array[3];
             File::delete(public_path() . $nombreAnterior);
             $file = $request->file('foto');
             $nombre = time() . "_" . $file->getClientOriginalName();
             Storage::disk('imgproductos')->put($nombre, File::get($file));
-            $producto->update(['foto' => asset("/images/productos/" . $nombre)]);
+            $producto->update(['foto' => "/images/productos/" . $nombre]);
         }
         return redirect('/admin/list/Productos');
     }
@@ -160,5 +166,48 @@ class productoController extends Controller implements interface_methods
     public function bajas()
     {
         return response()->json(array_values(Producto::all()->where('activo', '=', '0')->all()));
+    }
+
+    public function reponer()
+    {
+        return view('/admin/Productos/reponer');
+    }
+
+    public function reponer1(Request $request)
+    {
+        $unidades = $request->input('unidades');
+        $Nombreproducto = $request->input('producto');
+        $producto = Producto::all()->where('nombre', '=', $Nombreproducto)->first();
+        $producto->stock_actual += $unidades;
+        $producto->save();
+        $d = DB::table("direcciones")->where('domicilio', '=', $request->input('direccion'))->where('id_usuario', '=', Auth::id())->get()[0];
+        $direccion = Direccion::find($d->id);
+        $transportistas = Transportista::all();
+        $ids = array();
+        foreach ($transportistas as $t) {
+            array_push($ids, $t->id);
+        }
+        $idAleatorio = rand(0, count($ids) - 1);
+        $transportista = Transportista::find($ids[$idAleatorio]);
+        //Nuevo pedido a los fabricantes
+        $pedido = new Pedido();
+        $pedido->metodo_pago = "contrareembolso";
+        $pedido->fecha_pedido = date("Y-m-d");
+        $pedido->id_direccion = $direccion->id;
+        $pedido->id_transportista = $transportista->id;
+        $pedido->id_usuario = Auth::id();
+        $pedido->fecha_entrega = date("Y-m-d", strtotime($pedido->fecha_pedido . '+' . $transportista->duracion . 'days'));
+        $pedido->total = ($producto->precio_compra * $unidades);
+        $pedido->save();
+        //Insertar factura con los campos correspondientes
+        $factura = new Lineapedidos();
+        $factura->id_producto = $producto->id;
+        $factura->id_pedido = Pedido::all()->last()->id;
+        $factura->cantidad = $unidades;
+        $factura->precio = $producto->precio_compra;
+        $factura->save();
+        //Mandar mensaje de pedido enviado
+        Telegram::sendMessage(['chat_id' => '477948845', 'parse_mode' => 'HTML', 'text' => 'Se han recibido <b>' . $unidades . '</b> unidades al almacén localizado en <u>' . $direccion->domicilio . '</u> de <b>' . $producto->nombre . '</b>, provenientes de <u>' . Fabricante::find($producto->id_fabricante)->razon_social . '</u>']);
+        return redirect('/admin');
     }
 }

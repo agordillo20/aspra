@@ -28,6 +28,7 @@ class CreateProductos extends Migration
             $table->boolean('rebajado');
             $table->dateTime('fecha_fin_rebaja')->nullable(true);
             $table->double('precio_anterior');
+            $table->double('valoracion');
             $table->boolean('activo');
             $table->timestamps();
             $table->foreign('id_descripcion')->references('id')->on('descripcion')->cascadeOnDelete();

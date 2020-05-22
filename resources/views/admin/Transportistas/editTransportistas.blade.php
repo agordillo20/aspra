@@ -8,28 +8,40 @@
                     <div class="card-header w-auto text-center font-weight-bold bg-success">Editar Transportista</div>
                     <form method="post" action="/admin/update/Transportistas" id="formUpdate">
                         @csrf
-                        <div class="card-body">
+                        <div class="card-body bg-primary">
+                            <table class="table table-responsive-xl text-white font-weight-bold">
+                                <tr>
+                                    <td>
+                                        <label>Razon social</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="razon_social" value="{{$transportista->razon_social}}"
+                                               class="form-control"
+                                               required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Precio</label>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="precio" value="{{$transportista->precio}}"
+                                               class="form-control"
+                                               required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Duración maxima</label>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="duracion" value="{{$transportista->duracion}}"
+                                               class="form-control"
+                                               required>
+                                    </td>
+                                </tr>
+                            </table>
                             <input type="hidden" value="{{$transportista->id}}" name="id">
-                            <div class="row">
-                                <div class="col-2">
-                                    <label>Razon social</label>
-                                    <input type="text" name="razon_social" value="{{$transportista->razon_social}}"
-                                           class="form-control"
-                                           required>
-                                </div>
-                                <div class="col-2">
-                                    <label>Precio</label>
-                                    <input type="number" name="precio" value="{{$transportista->precio}}"
-                                           class="form-control"
-                                           required>
-                                </div>
-                                <div class="col-2">
-                                    <label>Duración maxima</label>
-                                    <input type="number" name="duracion" value="{{$transportista->duracion}}"
-                                           class="form-control"
-                                           required>
-                                </div>
-                            </div>
                         </div>
                     </form>
                     <button class="btn btn-outline-primary" onclick="actualizar()">Actualizar</button>

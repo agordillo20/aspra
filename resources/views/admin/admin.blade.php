@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('content')
+    @if (session('message'))
+        <div class="alert alert-success text-center" role="alert">
+            {{ session('message') }}
+        </div>
+    @endif
     <div class="admin">
         <div class="card text-center">
             <div class="card-header">
@@ -48,6 +53,9 @@
             sec.remove();
             //añadir
             if (nombre === "Productos") {
+                var reponer = document.createElement("a");
+                reponer.setAttribute("href", "admin/reponer/" + nombre);
+                reponer.appendChild(document.createTextNode("reponer " + nombre));
                 var ofertar = document.createElement("a");
                 ofertar.setAttribute("href", "admin/ofertar/" + nombre);
                 ofertar.appendChild(document.createTextNode("ofertar " + nombre));
@@ -62,8 +70,8 @@
             //añadir a los elementos padres
             var secundario = document.createElement("div");
             secundario.id = "apoyo";
-            if (ofertar !== undefined) {
-                secundario.append(add, show, ofertar);
+            if (ofertar !== undefined && reponer !== undefined) {
+                secundario.append(add, show, ofertar, reponer);
             } else {
                 secundario.append(add, show);
             }

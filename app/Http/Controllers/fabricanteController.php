@@ -24,6 +24,7 @@ class fabricanteController extends Controller implements interface_methods
         $fabricante->razon_social = $request->input('razon_social');
         $fabricante->origen = $request->input('origen');
         $fabricante->descripcion = $request->input('descripcion');
+        $fabricante->correo = $request->input('correo');
         $fabricante->save();
         return redirect('/admin/add/Fabricantes');
     }
@@ -31,6 +32,7 @@ class fabricanteController extends Controller implements interface_methods
     public function update(Request $request)
     {
         $fabricante = Fabricante::find($request->input('id'));
+        $fabricante->correo = $request->input('correo');
         $fabricante->razon_social = $request->input('razon_social');
         $fabricante->origen = $request->input('origen');
         $fabricante->descripcion = $request->input('descripcion');

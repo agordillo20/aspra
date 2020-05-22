@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,8 +58,11 @@ Route::post('/admin/editar/producto2', 'productoController@update2')->name('actu
 Route::post('/admin/editar/producto1', 'productoController@update1')->name('editar');
 Route::post('/admin/borrar/producto', 'productoController@delete')->name('borrar');
 Route::get('/admin/list/Productos', 'productoController@show');
+Route::post('/admin/reponer/producto', 'productoController@reponer1');
+Route::get('/admin/reponer/Productos', 'productoController@reponer');
 Route::get('/admin/ofertar/Productos', 'productoController@ofertar');
 Route::post('/admin/list/productos/baja', 'productoController@bajas');
+
 
 //Categorias
 Route::get('/admin/add/Categorias', 'categoriaController@add');
@@ -86,6 +88,8 @@ Route::post('/admin/update/fabricante', 'fabricanteController@update');
 //Catalogo
 Route::post('/catalogo/filtrar/productos', 'catalogoController@filtrar');
 Route::post('/catalogo/filtrar1/productos', 'catalogoController@filtrar1');
+Route::post('/producto/finOferta', 'catalogoController@finOferta');
+Route::post('/ordenar', 'catalogoController@ordenar');
 
 //Carrito
 Route::post('/carrito/add', 'carritoController@add');
@@ -103,7 +107,9 @@ Route::get('payment/status', array(
     'as' => 'payment.status',
     'uses' => 'PaypalController@getPaymentStatus',
 ));
+Route::post('/contrareembolso', 'carritoController@contrareembolso');
 Route::post('/pdf', 'perfilController@imprimirfactura');
+Route::get('/pdf', 'perfilController@imprimirfactura');
 Auth::routes(['verify' => true]);
 
 

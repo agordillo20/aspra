@@ -40,7 +40,7 @@
             <div class="border" style="height: 4.8em">
                 <div class="row">
                     <div class="col pl-4">
-                        {{Auth::user()->name}}
+                        {{\App\User::find(\Illuminate\Support\Facades\Auth::id())->name}}
                     </div>
                 </div>
                 <div class="row">

@@ -22,6 +22,6 @@ class Pedido extends Model
 
     public function getFacturas()
     {
-        return $this->hasMany(Factura::class);
+        return $this->hasMany(Lineapedidos::class);
     }
 }

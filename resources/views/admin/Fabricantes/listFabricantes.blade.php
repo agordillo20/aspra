@@ -7,11 +7,12 @@
                 <div class="card">
                     <div class="card-header w-auto text-center font-weight-bold bg-success">Listado de fabricantes</div>
                     <div class="card-body">
-                        <table class="table table-hover text-center">
+                        <table class="table table-hover text-center table-responsive-lg">
                             <thead>
                             <tr>
                                 <td>id</td>
                                 <td>Razon social</td>
+                                <td>Correo</td>
                                 <td>Descripcion</td>
                                 <td>Origen</td>
                                 <td>Creado</td>
@@ -24,6 +25,7 @@
                                 <tr>
                                     <td>{{$p->id}}</td>
                                     <td>{{$p->razon_social}}</td>
+                                    <td>{{$p->correo}}</td>
                                     <td>{{$p->descripcion}}</td>
                                     <td>{{$p->origen}}</td>
                                     <td>@if($p->created_at==null || $p->created_at=="")

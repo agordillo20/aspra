@@ -13,7 +13,7 @@ class CreateFacturas extends Migration
      */
     public function up()
     {
-        Schema::create('facturas', function (Blueprint $table) {
+        Schema::create('linea_pedidos', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('id_producto')->unsigned();
             $table->bigInteger('id_pedido')->unsigned();
@@ -32,6 +32,6 @@ class CreateFacturas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facturas');
+        Schema::dropIfExists('linea_pedidos');
     }
 }

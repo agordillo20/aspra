@@ -10,7 +10,7 @@
                             baja</i>Listado de productos
                     </div>
                     <div class="card-body">
-                        <table class="table table-hover text-center">
+                        <table class="table table-hover text-center table-responsive-lg">
                             <thead>
                             <tr>
                                 <td>id</td>

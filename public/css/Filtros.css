@@ -1,28 +1,59 @@
-.filtros {
-    font-family: serif;
-    overflow: auto;
-    overflow-x: hidden;
-    position: fixed;
-    height: 90%;
-    width: 19em;
-    right: -19em;
-    top: 5em;
-    padding-top: 20px;
-
+.txtShow {
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+    position: absolute;
 }
 
-.filtros.ocultar {
-    right: .25em;
+@media only screen and (max-width: 766px) {
+    .txtShow {
+        top: 4em;
+        left: 1em;
+    }
+
+    .filtros {
+        overflow-y: auto;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        position: fixed;
+        width: 60%;
+        height: 90%;
+        top: 3.7em;
+        right: 0;
+    }
 }
 
-.flecha {
-    position: fixed;
-    z-index: 10;
-    top: 5em;
-    right: .2em;
+@media only screen and (min-width: 767px) and (max-width: 1199px) {
+    .txtShow {
+        top: 5em;
+        left: 1em;
+    }
+
+    .filtros {
+        overflow-y: auto;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        position: fixed;
+        width: 19%;
+        height: 90%;
+        top: 5em;
+        right: 0;
+    }
 }
 
-.flecha.cambiar {
-    right: 19.2em;
-    top: 5.1em;
+@media only screen and (min-width: 1200px) {
+    .txtShow {
+        visibility: hidden;
+    }
+
+    .filtros {
+        overflow-y: auto;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        position: fixed;
+        width: 17%;
+        height: 90%;
+        top: 5em;
+        right: 0;
+    }
 }

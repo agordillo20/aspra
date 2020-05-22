@@ -7,11 +7,8 @@ use App\descripcion;
 use App\Fabricante;
 use App\Producto;
 use App\Transportista;
-use Carbon\Traits\Date;
-use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 
 class adminController extends Controller
@@ -116,7 +113,7 @@ class adminController extends Controller
             $nuevoPrecio = $producto->precio_venta - $producto->precio_venta * ($porcentaje / 100);
             DB::table('productos')->where('cod_producto', '=', $p)->update(['rebajado' => '1', 'precio_anterior' => $producto->precio_venta, 'precio_venta' => $nuevoPrecio,'fecha_fin_rebaja'=>$fecha]);
         }
-        return response()->json("oferta aplicada con exito");
+        return redirect("/admin")->with('message', 'oferta aplicada con exito');
     }
 
     public function obtener(Request $request)

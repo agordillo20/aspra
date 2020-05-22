@@ -3,7 +3,7 @@
 @section('content')
     <div class="col-sm-auto">
         <div class="row mx-1 justify-content-center">
-            <div class="col-7 contenedor" style="border-color: rgba(52,144,220,0.82)">
+            <div class="col contenedor" id="prodC">
                 <strong>({{$productos}})</strong> Articulos en el carrito
                 <div class="productos">
                     <table class="table table-responsive-lg table-hover listaCompra">
@@ -44,7 +44,9 @@
                     </table>
                 </div>
             </div>
-            <div class="col-4 finalizarCompra ml-4">
+        </div>
+        <div class="row m-1 justify-content-center">
+            <div class="col finalizarCompra" id="finalizarC">
                 <div class="row pt-2 bg-primary">
                 </div>
                 <div class="row mx-3 mt-2" style="height: 35%">
@@ -66,37 +68,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mt-5 py-1 align-items-end" style="height: 23%">
+                <div class="row mt-5 py-1 align-items-end" style="height: 23%;margin-bottom: 1em">
                     <div class="col text-center">
                         <button class="btn btn-outline-primary" onclick="comprobarC()">Finalizar pedido</button>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row mt-3 ml-5">
-            <button class="btn btn-outline-primary" onclick="location.href='{{ URL::previous() }}'">Seguir comprando
-            </button>
-        </div>
-    </div>
-    <div class="footer">
-        <div class="creditos">
-            <div class="font-weight-bold text-uppercase">
-                © I.E.S Castelar
-                <pre>tfg realizado por adrián gordillo domínguez</pre>
-            </div>
-        </div>
-        <div class="row">
-            <div class="opcionesPago">
-                Formas de pago
-                <hr/>
-                <i class="fab fa-cc-paypal"></i><i class="fab fa-cc-visa"></i><i class="fas fa-hand-holding-usd"></i><i
-                    class="fab fa-cc-mastercard"></i>
-            </div>
-            <div class="opcionesPago">
-                Redes sociales
-                <hr/>
-                <i class="fab fa-linkedin-in"></i><i class="fab fa-twitter-square"></i><i
-                    class="fab fa-instagram"></i><i class="fab fa-facebook"></i>
             </div>
         </div>
     </div>
@@ -104,7 +80,7 @@
         <div class="opcionesCentro">
             <div class="row justify-content-end mr-3 mt-2"><i class="fas fa-times" onclick="mostrarOpciones()"></i>
             </div>
-            <form action="/payment" method="post">
+            <form action="/payment" method="post" id="form">
                 @csrf
                 <div class="row mt-2 mx-2">
                     <div class="col">
@@ -119,20 +95,33 @@
                         <label for="transportista">Método de envio</label>
                         <select name="transportista" required class="custom-select">
                             @foreach(\App\Transportista::all() as $t)
-                                <option value="{{$t->razon_social}}">{{$t->razon_social}}</option>
+                                <option value="{{$t->razon_social}}">{{$t->razon_social}} - {{$t->precio}}€</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="row justify-content-center mt-5">
-                    <button class="btn btn-outline-primary" type="submit"><i class="fab fa-cc-paypal"
-                                                                             style="font-size: 40px"></i></button>
+                    <button class="btn btn-outline-primary mr-2" type="submit"><i class="fab fa-cc-paypal"
+                                                                                  style="font-size: 40px"></i></button>
+                    <button class="btn-outline-primary" onclick="contrareembolso()">Contrareembolso</button>
                 </div>
             </form>
 
         </div>
     </div>
     <script type="application/javascript">
+        $(document).ready(function () {
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                var container1 = $('#prodC');
+                var container2 = $('#finalizarC');
+                container1.removeClass("col");
+                container2.removeClass("col");
+                container1.addClass("col-10");
+                container2.addClass("col-7");
+                container2.addClass("mt-5");
+            }
+        });
+
         function comprobarC() {
             $.ajax({
                 type: "post",
@@ -200,6 +189,10 @@
 
         function mostrarOpciones() {
             $('#direccion').toggleClass('hide');
+        }
+
+        function contrareembolso() {
+            $('#form').attr("action", "/contrareembolso").submit();
         }
     </script>
 @endsection

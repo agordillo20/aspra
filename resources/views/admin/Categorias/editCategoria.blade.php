@@ -3,31 +3,36 @@
 @section('content')
     <div class="col-sm-auto">
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-md-11">
                 <div class="card">
                     <div class="card-header w-auto text-center font-weight-bold bg-success">Editar Categoria</div>
                     <form method="post" action="/admin/update/categoria" id="formUpdate">
                         @csrf
-                        <div class="card-body">
-                            <input type="hidden" value="{{$categoria->id}}" name="id">
-                            <div class="row">
-                                <div class="col-2">
-                                    <label>Nombre*</label>
-                                    <input type="text" name="nombre" value="{{$categoria->nombre}}" class="form-control"
-                                           required>
-                                </div>
+                        <div class="card-body bg-primary">
+                            <table class="table table-responsive-xl text-white font-weight-bold">
+                                <tr>
+                                    <td>
+                                        <label>Nombre*</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="nombre" value="{{$categoria->nombre}}"
+                                               class="form-control"
+                                               required>
+                                    </td>
+                                </tr>
                                 @foreach($campos as $c)
                                     @foreach($c as $v)
                                         @if($v!="nombre" && $v!="id" && $v!="created_at" && $v!="updated_at")
-                                            <div class="col-2">
-                                                <label>{{$v}}</label>
-                                                <input type="text" name="{{$v}}" value="{{$categoria->$v}}"
-                                                       class="form-control">
-                                            </div>
+                                            <tr>
+                                                <td><label>{{$v}}</label></td>
+                                                <td><input type="text" name="{{$v}}" value="{{$categoria->$v}}"
+                                                           class="form-control"></td>
+                                            </tr>
                                         @endif
                                     @endforeach
                                 @endforeach
-                            </div>
+                            </table>
+                            <input type="hidden" value="{{$categoria->id}}" name="id">
                         </div>
                     </form>
                     <button class="btn btn-outline-primary" onclick="actualizar()">Actualizar</button>

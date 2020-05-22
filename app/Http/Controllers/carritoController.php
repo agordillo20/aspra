@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Direccion;
+use App\Lineapedidos;
+use App\Pedido;
+use App\Producto;
+use App\Transportista;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -113,5 +118,40 @@ class carritoController extends Controller
     function pago()
     {
         return view('pago');
+    }
+
+    function contrareembolso(Request $request)
+    {
+        @session_start();
+        $direccion = Direccion::find(DB::table("direcciones")->where('domicilio', '=', $request->input('direccion'))->where('id_usuario', '=', Auth::id())->get()[0]->id);
+        $transportista = Transportista::find(DB::table("transportistas")->where('razon_social', '=', explode(" - ", $request->input('transportista'))[0])->get()[0]->id);
+        $pedido = new Pedido();
+        $pedido->fecha_pedido = date("Y-m-d");
+        $pedido->id_direccion = $direccion->id;
+        $pedido->id_transportista = $transportista->id;
+        $pedido->id_usuario = Auth::id();
+        $pedido->metodo_pago = "contrareembolso";
+        $pedido->fecha_entrega = date("Y-m-d", strtotime($pedido->fecha_pedido . '+' . $transportista->duracion . 'days'));
+        $cart = $_SESSION['carrito'];
+        $total = 0;
+        foreach ($cart as $producto) {
+            $total += ($producto[1]['precio_venta'] * $producto[0]);
+        }
+        $pedido->total = $total;
+        $pedido->save();
+        foreach ($cart as $producto) {
+            $factura = new Lineapedidos();
+            $factura->id_pedido = $pedido->id;
+            $factura->id_producto = $producto[1]['id'];
+            $factura->precio = $producto[1]['precio_venta'];
+            $factura->cantidad = $producto[0];
+            $total += ($producto[1]['precio_venta'] * $producto[0]);
+            $factura->save();
+            $productoC = Producto::find($producto[1]['id']);
+            $productoC->stock_actual = $productoC->stock_actual - $producto[0];
+            $productoC->save();
+        }
+        session_destroy();
+        return redirect("/home")->with('message', 'pedido realizado correctamente,recibira la factura junto a su pedido en un periodo de ' . ($transportista->duracion - 2) . '-' . $transportista->duracion . ' dias hábiles');
     }
 }

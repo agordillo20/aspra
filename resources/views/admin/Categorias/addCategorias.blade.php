@@ -9,33 +9,46 @@
                     <div class="card-body bg-primary text-white">
                         <form method="POST" enctype="multipart/form-data" action="{{'/admin/add/categoria'}}">
                             @csrf
+                            <table class="table table-responsive-xl text-white font-weight-bold">
+                                <tr>
+                                    <td>
+                                        <label for="nombre">{{ __('Nombre') }}</label>
+                                    </td>
+                                    <td>
+                                        <input id="nombre" type="text"
+                                               class="form-control @error('nombre') is-invalid @enderror"
+                                               name="nombre"
+                                               required autocomplete="nombre">
+
+                                        @error('nombre')
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                        @enderror
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="campos">{{ __('¿Cuántos campos desea?') }}</label>
+                                    </td>
+                                    <td>
+                                        <input id="campos" type="number" min="0" max="18"
+                                               class="form-control @error('origen') is-invalid @enderror"
+                                               name="campos"
+                                               required autocomplete="campos">
+
+                                        @error('campos')
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                        @enderror
+                                    </td>
+                                </tr>
+                            </table>
                             <div class="form-group row">
-                                <label for="nombre"
-                                       class="col-2 col-form-label text-md-right">{{ __('Nombre') }}</label>
-                                <input id="nombre" type="text"
-                                       class="form-control col-2 @error('nombre') is-invalid @enderror"
-                                       name="nombre"
-                                       required autocomplete="nombre">
-
-                                @error('nombre')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                                <label for="campos"
-                                       class="col-3 col-form-label text-md-right">{{ __('¿Cuántos campos desea?') }}</label>
-                                <input id="campos" type="number" min="0" max="18"
-                                       class="form-control col-1 @error('origen') is-invalid @enderror"
-                                       name="campos"
-                                       required autocomplete="campos">
-
-                                @error('campos')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
                                 <div class="col text-center">
-                                    <button type="button" class="btn btn-secondary" onclick="addCampos()" id="btnAdd">Añadir
+                                    <button type="button" class="btn btn-secondary" onclick="addCampos()" id="btnAdd">
+                                        Añadir
                                     </button>
                                 </div>
                             </div>

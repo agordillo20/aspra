@@ -18,6 +18,9 @@
                             <label>Descripción</label>
                             <input type="text" name="descripcion" value="{{$fabricante->descripcion}}"
                                    class="form-control">
+                            <label>Correo</label>
+                            <input type="text" name="correo" value="{{$fabricante->correo}}"
+                                   class="form-control">
                         </div>
                     </form>
                     <button class="btn btn-outline-primary" onclick="actualizar()">Actualizar</button>

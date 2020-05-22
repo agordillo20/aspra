@@ -3,9 +3,19 @@
 @section('content')
     <input type="hidden" value="{{$id_categoria}}" id="id_categoria">
     <div class="col">
-        <div class="col-12" id="cambio">
+        <div class="col-10">
             <div class="card" style="background-color: rgba(5,92,28,0.31)">
-                <div class="card-header text-center font-weight-bold bg-success titulo">{{$nombre}} disponibles</div>
+                <div class="card-header text-center font-weight-bold bg-success titulo">{{$nombre}} disponibles
+                    <div class="float-right"> Ordenar por <select id="orden" name="orden"
+                                                                  class="custom-select-sm"
+                                                                  style="border-radius:5px;font-size: 15px">
+                            <option value="Mvalo">Mejores valoradas ⭐</option>
+                            <option value="Aasc">Orden alfabético(A-Z)</option>
+                            <option value="Adesc">Orden alfabético(Z-A)</option>
+                            <option value="Pdesc">Precio más alto</option>
+                            <option value="Pasc">Precio más bajo</option>
+                        </select></div>
+                </div>
                 <div class="card-body" id="principal">
                     <div class="row" id="borrar">
                         @foreach($productos as $p)
@@ -23,13 +33,12 @@
                                         @endif
 
                                     </div>
-                                    <img class="img-fluid" src={{$p->foto}} th:alt="foto"
+                                    <img class="img-fluid" src={{URL::asset($p->foto)}} th:alt="foto"
                                          style="height: 230px;width: 200px;"/>
                                 </div>
                                 <div class="card-footer text-center" style="margin-bottom: 3em;">
                                     <button class="btn btn-link font-weight-bold"
                                             onclick="visualizarProduct({{$p->id}})">{{$p->nombre}}</button>
-
                                 </div>
                             </div>
                         @endforeach
@@ -37,13 +46,14 @@
                 </div>
             </div>
         </div>
+        <form method="post" action="/show" id="formShow">
+            @csrf
+            <input type="hidden" name="id" id="dato">
+        </form>
     </div>
-    <form method="post" action="/show" id="formShow">
-        @csrf
-        <input type="hidden" name="id" id="dato">
-    </form>
-    <div class="col-2 filtros" style="background-color:rgba(255,236,190,0.6)">
-        <img class="flecha" id="imagen" src="{{URL::asset('/images/menuIzq.png')}}" onclick="mostrarFiltros()">
+
+    {{--FILTROS--}}
+    <div class="col-12 filtros" style="background-color:rgba(255,236,190,0.6)">
         <pre class="font-weight-bold text-center">Filtros disponibles</pre>
         <div class="card filtro">
             <div class="card-header">
@@ -54,10 +64,10 @@
                 </div>
             </div>
             <div class="card-body" id="cuerpo0">
-                    @foreach($marcas as $v)
-                        <pre><input type="checkbox" value="{{$v}}" onchange="filtrar(this.id)"
-                                    id="checkbox{{uniqid()}}">   {{$v}}</pre>
-                    @endforeach
+                @foreach($marcas as $v)
+                    <pre><input type="checkbox" value="{{$v}}" onchange="filtrar(this.id)"
+                                id="checkbox{{uniqid()}}">   {{$v}}</pre>
+                @endforeach
             </div>
         </div>
         @for($i=1;$i<count($categorias);$i++)
@@ -84,8 +94,42 @@
             </div>
         @endfor
     </div>
-
+    <div class="txtShow btn-link" onclick="mostrarFiltros()">Mostrar/Ocultar filtros</div>
     <script type="application/javascript">
+        $(window).resize(function () {
+            if (screen.width > 1200) {
+                $('.filtros').slideDown("slow");
+            }
+        });
+        $(document).ready(function () {
+            if (screen.width < 767) {
+                $('.filtros').slideUp("fast");
+            }
+            $('#orden').on('change', function () {
+                var valor = $(this).val();
+                var padre = $('#borrar')[0];
+                var productos = [];
+                console.log(padre);
+                for (let i = 0; i < padre.childNodes.length; i++) {
+                    if (padre.childNodes[i].nodeName !== "#text") {
+                        productos.push(padre.childNodes[i].lastChild.firstChild.firstChild.textContent);
+                    }
+                }
+                $.ajax({
+                    type: 'post',
+                    url: '/ordenar',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: {'valor': valor, nombresProd: productos},
+                    success: function (data) {
+                        renderizar(data);
+                    },
+                    error: function () {
+                        console.log("error en la peticion ajax");
+                    }
+                });
+            });
+        });
+
         function visualizarProduct(id) {
             $('#dato').val(id);
             $('#formShow').submit();
@@ -103,20 +147,7 @@
         });
 
         function mostrarFiltros() {
-            var img = $('#imagen');
-            if (img.attr('src') === "http://127.0.0.1:8000/images/menuIzq.png") {
-                img.attr('src', 'http://127.0.0.1:8000/images/menuDrch.png');
-            } else {
-                img.attr('src', 'http://127.0.0.1:8000/images/menuIzq.png');
-            }
-            $('.filtros').toggleClass("ocultar");
-            img.toggleClass("cambiar");
-            var cambio = $('#cambio');
-            if (cambio.attr('class') === "col-12") {
-                cambio.attr('class', 'col-10');
-            } else {
-                cambio.attr('class', 'col-12');
-            }
+            $('.filtros').slideToggle('slow');
         }
 
         function abrirCerrar(id) {
@@ -233,8 +264,8 @@
                 div5.className = "card-footer text-center";
                 div5.style.marginBottom = "3em";
                 var button = document.createElement("button");
-                button.onclick=function(){
-                   visualizarProduct(element.id);
+                button.onclick = function () {
+                    visualizarProduct(element.id);
                 };
                 button.className = "btn btn-link font-weight-bold";
                 button.appendChild(document.createTextNode(element.nombre));

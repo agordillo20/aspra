@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Direccion;
-use App\Factura;
+use App\Lineapedidos;
 use App\Mail\EnviarFactura;
 use App\Order;
 use App\OrderItem;
 use App\Pedido;
+use App\Producto;
 use App\Transportista;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Http\Request;
@@ -46,10 +47,9 @@ class paypalController extends BaseController
         //Mirar como incluir iva
         session_start();
         $_SESSION['direccion'] = $request->input('direccion');
-        $_SESSION['transportista'] = $request->input('transportista');
+        $_SESSION['transportista'] = explode(" - ", $request->input('transportista'))[0];
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
-
         $items = array();
         $subtotal = 0;
         $cart = $_SESSION['carrito'];
@@ -159,18 +159,22 @@ class paypalController extends BaseController
         $pedido->fecha_pedido = date("Y-m-d");
         $pedido->id_direccion = $direccion->id;
         $pedido->id_transportista = $transportista->id;
+        $pedido->metodo_pago = "paypal";
         $pedido->id_usuario = Auth::id();
         $pedido->fecha_entrega = date("Y-m-d", strtotime($pedido->fecha_pedido . '+' . $transportista->duracion . 'days'));
         $pedido->total = $_SESSION['precio'];
         $pedido->save();
         $cart = $_SESSION['carrito'];
         foreach ($cart as $producto) {
-            $factura = new Factura();
-            $factura->id_producto = $producto[1]['id'];
+            $factura = new Lineapedidos();
             $factura->id_pedido = $pedido->id;
+            $factura->id_producto = $producto[1]['id'];
             $factura->precio = $producto[1]['precio_venta'];
             $factura->cantidad = $producto[0];
             $factura->save();
+            $productoC = Producto::find($producto[1]['id']);
+            $productoC->stock_actual = $productoC->stock_actual - $producto[0];
+            $productoC->save();
         }
         session_destroy();
     }

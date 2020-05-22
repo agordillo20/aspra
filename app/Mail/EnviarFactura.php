@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Direccion;
-use App\Factura;
+use App\Lineapedidos;
 use App\Pedido;
 use App\Transportista;
 use Illuminate\Bus\Queueable;
@@ -34,7 +34,7 @@ class EnviarFactura extends Mailable
     {
         $pedido = $this->pedido;
         $pedido = Pedido::find($pedido->id);
-        $facturas = Factura::all()->where('id_pedido', '=', $pedido->id);
+        $facturas = Lineapedidos::all()->where('id_pedido', '=', $pedido->id);
         $pdf = \PDF::loadView('pdf', ['cod_factura' => '000' . $pedido->id, 'direccion' => Direccion::find($pedido->id_direccion), 'transportista' => Transportista::find($pedido->id_transportista), 'factura' => $facturas])->output();
         return $this->view('Mail.Facturas')->attachData($pdf, "factura.pdf");
     }

@@ -138,3 +138,55 @@ function comprar() {
         codigos.push(item.lastChild.textContent);
     });
 }
+
+function mostrarContador(nombre, id, fecha) {
+    var x = setInterval(function () {
+        var dias;
+        var horas;
+        var minutos;
+        var segundos;
+        var now = new Date();
+        var fin = new Date(fecha);
+        let tiempo = (fin.getTime() - now.getTime()) / 1000;
+        segundos = parseInt((tiempo % 60), 10);
+        minutos = parseInt((tiempo / 60 % 60), 10);
+        horas = parseInt(tiempo / 3600, 10);
+        if (horas >= 24) {
+            dias = parseInt(horas / 24, 10);
+            horas = parseInt(horas % 24, 10);
+            $("#" + nombre).text(dias + "d : " + horas + "h : " + minutos + "m : " + segundos + "s");
+            $('#' + nombre).css("color", "blue");
+        } else {
+            if (horas < 1) {
+                $('#' + nombre).css("color", "red").css("font-weight", "bold");
+            }
+            if (horas < 4) {
+                $('#' + nombre).css("color", "red");
+            } else {
+                $('#' + nombre).css("color", "green");
+            }
+            $("#" + nombre).text(horas + "h : " + minutos + "m : " + segundos + "s");
+        }
+        $("#" + nombre).removeAttr("hidden");
+        if (tiempo <= 0) {
+            clearInterval(x);
+            terminarOferta(id);
+            $("#" + nombre).hide();
+        }
+    }, 1000);
+}
+
+function terminarOferta(id) {
+    $.ajax({
+        type: "post",
+        url: "/producto/finOferta",
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data: {id: id},
+        success: function () {
+            location.reload();
+        },
+        onerror: function () {
+            console.log("error en la peticion ajax");
+        }
+    });
+}

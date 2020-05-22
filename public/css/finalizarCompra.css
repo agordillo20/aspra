@@ -19,13 +19,25 @@
     vertical-align: middle;
 }
 
-.finalizarCompra {
-    background-color: rgba(0, 92, 94, 0.2);
-    height: 14em;
+@media screen and (max-width: 767px) {
+    .finalizarCompra {
+        margin-top: 1em;
+        background-color: rgba(0, 92, 94, 0.2);
+        height: 14em;
+        position: center;
+    }
 }
 
+@media screen and (min-width: 768px) {
+    .finalizarCompra {
+        background-color: rgba(0, 92, 94, 0.2);
+        height: 14em;
+    }
+}
+
+
 .footer {
-    position: fixed;
+    z-index: 5;
     bottom: 0;
     left: 0;
     right: 0;
@@ -47,16 +59,9 @@
 }
 
 .contenedor {
+    border-color: rgba(52, 144, 220, 0.82);
     border-style: double;
     background-color: rgba(0, 92, 94, 0.2);
-}
-
-.creditos {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    height: 5em;
-    width: 22em;
 }
 
 .opcionesPago {

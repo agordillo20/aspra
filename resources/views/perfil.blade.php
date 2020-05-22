@@ -7,38 +7,39 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="principal">Mis Datos @if($usuario->foto==null)<img
-                        src="{{URL::asset('images/defUser.png')}}"> @else <img src="{{$usuario->foto}}"> @endif</div>
+                        src="{{URL::asset('images/defUser.png')}}"> @else <img
+                        src={{URL::asset($usuario->foto)}}> @endif</div>
                 <a href="#" onclick="updateFoto()">Cambiar foto de perfil</a>
                 <div class="secundario" style="background-image: url({{URL::asset('images/fondo.png')}})">
                     Mi cuenta<br>
                     <pre>{{$usuario->email}}</pre>
                 </div>
                 <div>
-                    <table class="table table-hover">
+                    <table class="table">
                         <tr>
                             <td>
                                 <form action="/updateUser" method="post">
                                     @csrf
+                                    <table class="table table-light" id="tableDatosU">
+                                        <tr>
+                                            <td class="text-center">
+                                                <div class="pedidos text-center" onclick="listaPedidos()">
+                                                    <b id="bTxt">PEDIDOS</b>
+                                                    <p class="listaPedidos">{{$pedidos}}</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <label>Nick</label><br>
+                                                <input class="form-control" type="text" name="username"
+                                                       value="{{$usuario->name}}">
+                                                <label>Fecha de nacimiento</label>
+                                                <input type="date" class="form-control" name="fecha_nacimiento"
+                                                       value="{{$usuario->fecha_nacimiento}}">
+                                            </td>
+                                        </tr>
+                                    </table>
                                     <div class="row">
-                                        <div class="col-3">
-                                            <div class="pedidos text-center">
-                                                PEDIDOS
-                                                <p class="listaPedidos" onclick="listaPedidos()">{{$pedidos}}</p>
-                                            </div>
-                                        </div>
                                         <div class="col">
-                                            <label>Nick</label><br>
-                                            <input class="form-control" type="text" name="username"
-                                                   value="{{$usuario->name}}" style="width: min-content">
-                                        </div>
-                                        <div class="col">
-                                            <label style="margin-left: -3em">Fecha de nacimiento</label>
-                                            <input type="date" class="form-control" name="fecha_nacimiento"
-                                                   style="margin-left: -3em" value="{{$usuario->fecha_nacimiento}}">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col text-right">
                                             <button type="submit" class="btn btn-outline-primary">Guardar cambios
                                             </button>
                                         </div>
@@ -69,7 +70,7 @@
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top: 1.5em">
-                                            <div class="col text-right">
+                                            <div class="col">
                                                 <button type="submit" class="btn btn-outline-primary">Actualizar
                                                     contraseña
                                                 </button>
@@ -83,59 +84,48 @@
                             <td>
                                 <div class="direcciones">
                                     <p>Direcciones de envio</p>
-                                    <div class="cabecera row font-weight-bold">
-                                        <div class="col-2">
-                                            <label>Pais</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <label>Provincia</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <label>Localidad</label>
-                                        </div>
-                                        <div class="col-2">
-                                            <label>Codigo postal</label>
-                                        </div>
-                                        <div class="col">
-                                            <label>Domicilio</label>
-                                        </div>
-                                    </div>
-                                    @foreach(\App\Direccion::all()->where('id_usuario','=',Auth::id()) as $direccion)
-                                        <div class="row">
-                                            <div class="col-2">
-                                                <label>{{$direccion->pais}}</label>
-                                            </div>
-                                            <div class="col-2">
-                                                <label>{{$direccion->provincia}}</label>
-                                            </div>
-                                            <div class="col-2">
-                                                <label>{{$direccion->localidad}}</label>
-                                            </div>
-                                            <div class="col-2">
-                                                <label>{{$direccion->cod_postal}}</label>
-                                            </div>
-                                            <div class="col-1">
-                                                <label>{{$direccion->domicilio}}</label>
-                                            </div>
-                                            <div class="col">
-                                                <div class="dropright">
-                                                    <button class="btn-outline-primary btn-xs dropdown-toggle"
-                                                            type="button" id="dropdownMenu2" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2"
-                                                         style="width: 10px !important;">
-                                                        <button class="dropdown-item" type="button"
-                                                                onclick="borrar({{$direccion->id}})"><i
-                                                                class="far fa-trash-alt"></i></button>
-                                                        <button class="dropdown-item" type="button"
-                                                                onclick="editar({{$direccion->id}})"><i
-                                                                class="fas fa-edit"></i></button>
+                                    <table class="table table-responsive-xl ">
+                                        <thead>
+                                        <tr class="cabecera font-weight-bold">
+                                            <td>Pais</td>
+                                            <td>Provincia</td>
+                                            <td>Localidad</td>
+                                            <td>Codigo postal</td>
+                                            <td>Domicilio</td>
+                                            <td></td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach(\App\Direccion::all()->where('id_usuario','=',Auth::id()) as $direccion)
+                                            <tr>
+                                                <td>{{$direccion->pais}}</td>
+                                                <td>{{$direccion->provincia}}</td>
+                                                <td>{{$direccion->localidad}}</td>
+                                                <td>{{$direccion->cod_postal}}</td>
+                                                <td>{{$direccion->domicilio}}</td>
+                                                <td>
+                                                    <div class="dropright">
+                                                        <button class="btn-outline-primary btn-xs dropdown-toggle"
+                                                                type="button" id="dropdownMenu2" data-toggle="dropdown"
+                                                                aria-haspopup="true" aria-expanded="false">
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2"
+                                                             style="width: 10px !important;">
+                                                            <button class="dropdown-item" type="button"
+                                                                    onclick="borrar({{$direccion->id}})"><i
+                                                                    class="far fa-trash-alt"></i> Borrar
+                                                            </button>
+                                                            <button class="dropdown-item" type="button"
+                                                                    onclick="editar({{$direccion->id}})"><i
+                                                                    class="fas fa-edit"></i> Modificar
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
                                     <div class="row">
                                         <div class="col">
                                             <a class="btn-link" href="#" onclick="popUp()"><i class="fas fa-plus"></i>
@@ -257,17 +247,43 @@
         <div class="cen">
             <table class="table">
                 <thead>
-                <tr>
+                <tr id="trd" class="font-weight-bold">
                     <td>Fecha</td>
-                    <td>Factura</td>
+                    <td id="txtCambiar">Factura</td>
+                    <td id="ult"><i class="fas fa-times cerrarH" onclick="listaPedidos()"></i></td>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach(\App\Pedido::all()->where('id_usuario','=',\Illuminate\Support\Facades\Auth::id()) as $p)
-                    <tr>
-                        <td>{{$p->fecha_pedido}}</td>
-                        <td><i id="{{$p->id}}" class="fas fa-file-pdf" onclick="factura(this.id)"></i></td>
-                    </tr>
+                    @if(\Illuminate\Support\Facades\Auth::id()=="1")
+                        <script type="application/javascript">
+                            $('#txtCambiar').text('Nombre');
+                            let td = document.createElement("td");
+                            td.appendChild(document.createTextNode("Cantidad"));
+
+                            function insertAfter(e, i) {
+                                if (e.nextSibling) {
+                                    e.parentNode.insertBefore(i, e.nextSibling);
+                                } else {
+                                    e.parentNode.appendChild(i);
+                                }
+                            }
+
+                            insertAfter(document.getElementById("txtCambiar"), td)
+                            $('#bTxt').text('Historial de repuestos');
+                        </script>
+                        <tr>
+                            <td>{{$p->fecha_pedido}}</td>
+                            <td>{{\App\Producto::find(\App\Lineapedidos::all()->where('id_pedido','=',$p->id)->first()->id_producto)->nombre}}</td>
+                            <td>{{\App\Lineapedidos::all()->where('id_pedido','=',$p->id)->first()->cantidad}}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td>{{$p->fecha_pedido}}</td>
+                            <td><i id="{{$p->id}}" class="fas fa-file-pdf"
+                                   onclick="factura(this.id);console.log(this.id)"></i></td>
+                        </tr>
+                    @endif
                 @endforeach
                 </tbody>
             </table>
@@ -280,6 +296,9 @@
     {{--    javascript y jquery--}}
     <script type="application/javascript">
         $(document).ready(function () {
+            if (screen.width < 767) {
+                $('#tableDatosU').addClass("w-auto");
+            }
             $('#alerta').hide();
         });
 

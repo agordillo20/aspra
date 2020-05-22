@@ -231,8 +231,50 @@ class catalogoController extends Controller
                 array_push($arrayCamposCategoria, str_replace('_', ' ', $categoria->$nombre));
             }
         }
-        $Nombrecategoria = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->where('productos.id_categoria','=',$producto->id_categoria)->select('categorias.nombre')->get()[0];
+        $Nombrecategoria = DB::table('productos')->join('categorias', 'productos.id_categoria', '=', 'categorias.id')->where('productos.id_categoria', '=', $producto->id_categoria)->select('categorias.nombre')->get()[0];
         $fabricante = DB::table('productos')->join('fabricantes', 'productos.id_fabricante', '=', 'fabricantes.id')->select('razon_social')->where('productos.id', '=', $producto->id)->get()[0];
         return view('ConsultaProducto', ['producto' => $producto, 'nombre' => $Nombrecategoria, 'fabricante' => $fabricante, 'camposCategoria' => $arrayCamposCategoria, 'camposDescripcion' => $arrayCamposDescripcion]);
+    }
+
+    public function finOferta(Request $request)
+    {
+        $id = $request->input('id');
+        DB::table('productos')->where('id', '=', $id)->update(['rebajado' => '0', 'fecha_fin_rebaja' => null, 'precio_venta' => Producto::find($id)->precio_anterior]);
+        return response()->json();
+    }
+
+    public function ordenar(Request $request)
+    {
+        $valor = $request->input('valor');
+        $productos = $request->input('nombresProd');
+        $sql = "select * from productos where activo=1 ";
+        $i = 0;
+        foreach ($productos as $p) {
+            if ($i == 0) {
+                $sql = $sql . "AND (nombre='" . $p . "' ";
+            } else {
+                $sql = $sql . "OR nombre='" . $p . "' ";
+            }
+            $i++;
+        }
+        $sql = $sql . ")";
+        switch ($valor) {
+            case "Aasc":
+                $sql = $sql . " order by nombre";
+                break;
+            case "Adesc":
+                $sql = $sql . " order by nombre desc";
+                break;
+            case "Pdesc":
+                $sql = $sql . " order by precio_venta desc";
+                break;
+            case "Pasc":
+                $sql = $sql . " order by precio_venta";
+                break;
+            case "Mvalo":
+                $sql = $sql . " order by valoracion desc";
+                break;
+        }
+        return response()->json(DB::select($sql));
     }
 }

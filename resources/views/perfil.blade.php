@@ -269,7 +269,7 @@
                                 }
                             }
 
-                            insertAfter(document.getElementById("txtCambiar"), td)
+                            insertAfter(document.getElementById("txtCambiar"), td);
                             $('#bTxt').text('Historial de repuestos');
                         </script>
                         <tr>

@@ -36,6 +36,7 @@ Route::post('/direccion/update', 'perfilController@updateDireccion');
 Route::get('/admin', 'adminController@index')->name('admin');
 
 //Rutas ajax
+Route::post('/categorias/nombres', 'adminController@nombres');
 Route::post('/admin/verCategoria', 'adminController@showCategoria');
 Route::post('/admin/verFabricante', 'adminController@showFabricante');
 Route::post('/admin/verDescripcion', 'adminController@showDescripcion');
@@ -51,7 +52,7 @@ Route::post('/admin/editar/Transportistas', 'adminController@editTransportistas'
 //Productos
 Route::get('/admin/add/Productos', 'productoController@add');
 Route::post('/admin/add/producto', 'productoController@add1');
-Route::post('/admin/add/descripcion', 'productoController@addDescripcion')->name('descripcion');
+Route::post('/admin/add/descripcion', 'productoController@addDescripcion');
 Route::post('/admin/update/descripcion', 'productoController@updateDescripcion');
 Route::post('/admin/editar/producto', 'productoController@update');
 Route::post('/admin/editar/producto2', 'productoController@update2')->name('actualizar');
@@ -107,7 +108,7 @@ Route::get('payment/status', array(
     'as' => 'payment.status',
     'uses' => 'PaypalController@getPaymentStatus',
 ));
-Route::post('/contrareembolso', 'carritoController@contrareembolso');
+Route::post('/contrarrembolso', 'carritoController@contrarrembolso');
 Route::post('/pdf', 'perfilController@imprimirfactura');
 Route::get('/pdf', 'perfilController@imprimirfactura');
 Auth::routes(['verify' => true]);

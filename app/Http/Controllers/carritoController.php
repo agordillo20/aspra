@@ -120,7 +120,7 @@ class carritoController extends Controller
         return view('pago');
     }
 
-    function contrareembolso(Request $request)
+    function contrarrembolso(Request $request)
     {
         @session_start();
         $direccion = Direccion::find(DB::table("direcciones")->where('domicilio', '=', $request->input('direccion'))->where('id_usuario', '=', Auth::id())->get()[0]->id);

@@ -60,9 +60,9 @@
                                         </button>
                                     </td>
                                 </tr>
+                                </tbody>
+                            </table>
                         </form>
-                        </tbody>
-                        </table>
                     </div>
                 </div>
             </div>

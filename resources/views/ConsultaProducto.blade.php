@@ -67,7 +67,6 @@
         });
 
         function addCarrito(producto) {
-            debugger
             if (compr(producto)) {
                 if (producto.stock_actual > $('input[name="cantidad"]').val() && $('input[name="cantidad"]').val() > 0) {
                     add(producto, $('input[name="cantidad"]').val());
@@ -81,7 +80,7 @@
         }
 
         function compr(producto) {
-            debugger
+
             var can = false;
             var articulos = document.getElementById("carritoCentro");
             if (articulos.childNodes.length > 0) {

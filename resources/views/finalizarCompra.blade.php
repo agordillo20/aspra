@@ -103,7 +103,7 @@
                 <div class="row justify-content-center mt-5">
                     <button class="btn btn-outline-primary mr-2" type="submit"><i class="fab fa-cc-paypal"
                                                                                   style="font-size: 40px"></i></button>
-                    <button class="btn-outline-primary" onclick="contrareembolso()">Contrareembolso</button>
+                    <button class="btn-outline-primary" onclick="contrarrembolso()">Contrarrembolso</button>
                 </div>
             </form>
 
@@ -191,8 +191,8 @@
             $('#direccion').toggleClass('hide');
         }
 
-        function contrareembolso() {
-            $('#form').attr("action", "/contrareembolso").submit();
+        function contrarrembolso() {
+            $('#form').attr("action", "/contrarrembolso").submit();
         }
     </script>
 @endsection

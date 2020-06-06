@@ -44,7 +44,6 @@ class paypalController extends BaseController
 
     public function postPayment(Request $request)
     {
-        //Mirar como incluir iva
         session_start();
         $_SESSION['direccion'] = $request->input('direccion');
         $_SESSION['transportista'] = explode(" - ", $request->input('transportista'))[0];

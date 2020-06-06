@@ -23,7 +23,7 @@
                                 <div class="card card-body text-center align-items-center"
                                      style="margin-bottom: 1em;">
                                     <div class="row">
-                                        @if($p->precio_anterior!=$p->precio_venta)
+                                        @if($p->rebajado)
                                             <div class="col"
                                                  style="text-decoration: line-through">{{$p->precio_anterior}}€
                                             </div>
@@ -59,18 +59,18 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-10">Marca</div>
-                    <div class="col-1 text-right"><i id="icono_0" class="fas fa-times"
+                    <div class="col-1 text-right"><i id="icono_00" class="fas fa-times"
                                                      onclick="abrirCerrar(this.id)"></i></div>
                 </div>
             </div>
-            <div class="card-body" id="cuerpo0">
+            <div class="card-body" id="cuerpo00">
                 @foreach($marcas as $v)
                     <pre><input type="checkbox" value="{{$v}}" onchange="filtrar(this.id)"
                                 id="checkbox{{uniqid()}}">   {{$v}}</pre>
                 @endforeach
             </div>
         </div>
-        @for($i=1;$i<count($categorias);$i++)
+        @for($i=0;$i<count($categorias);$i++)
             <div class="card filtro" id="oc{{$i}}">
                 <div class="card-header">
                     <div class="row">
@@ -105,11 +105,30 @@
             if (screen.width < 767) {
                 $('.filtros').slideUp("fast");
             }
+            var valor = $('#orden').val();
+            var padre = $('#borrar')[0];
+            var productos = [];
+            for (let i = 0; i < padre.childNodes.length; i++) {
+                if (padre.childNodes[i].nodeName !== "#text") {
+                    productos.push(padre.childNodes[i].lastChild.firstChild.firstChild.textContent);
+                }
+            }
+            $.ajax({
+                type: 'post',
+                url: '/ordenar',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {'valor': valor, nombresProd: productos},
+                success: function (data) {
+                    renderizar(data);
+                },
+                error: function () {
+                    console.log("error en la peticion ajax");
+                }
+            });
             $('#orden').on('change', function () {
                 var valor = $(this).val();
                 var padre = $('#borrar')[0];
                 var productos = [];
-                console.log(padre);
                 for (let i = 0; i < padre.childNodes.length; i++) {
                     if (padre.childNodes[i].nodeName !== "#text") {
                         productos.push(padre.childNodes[i].lastChild.firstChild.firstChild.textContent);
@@ -142,7 +161,9 @@
             if (j === 1) {
                 for (var i = 0; i < document.getElementsByClassName("card filtro").length; i++) {
                     abrirCerrar("icono_" + i);
+
                 }
+                abrirCerrar("icono_00");
             }
         });
 
@@ -236,6 +257,7 @@
             remove.id = "borrar";
             principal.appendChild(remove);
             data.forEach(function (element) {
+                debugger
                 var div = document.createElement("div");
                 div.className = "col-md-3";
                 var div1 = document.createElement("div");
@@ -245,14 +267,22 @@
                 var div2 = document.createElement("div");
                 div2.className = "row";
                 div1.appendChild(div2);
-                var div3 = document.createElement("div");
-                div3.className = "col";
-                div3.style.textDecoration = "line-through";
-                div3.appendChild(document.createTextNode(element.precio_anterior + "€"));
-                var div4 = document.createElement("div");
-                div4.className = "col font-weight-bold";
-                div4.appendChild(document.createTextNode("Ahora:" + element.precio_venta + "€"));
-                div2.append(div3, div4);
+                if (element.rebajado) {
+                    var div3 = document.createElement("div");
+                    div3.className = "col";
+                    div3.style.textDecoration = "line-through";
+                    div3.appendChild(document.createTextNode(element.precio_anterior + "€"));
+                    var div4 = document.createElement("div");
+                    div4.style.color = "red";
+                    div4.className = "col font-weight-bold";
+                    div4.appendChild(document.createTextNode("Ahora:" + element.precio_venta + "€"));
+                    div2.append(div3, div4);
+                } else {
+                    var div4 = document.createElement("div");
+                    div4.className = "col font-weight-bold";
+                    div4.appendChild(document.createTextNode(element.precio_venta + "€"));
+                    div2.append(div4);
+                }
                 var img = document.createElement("img");
                 img.className = "img-fluid";
                 img.src = element.foto;

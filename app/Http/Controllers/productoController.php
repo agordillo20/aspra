@@ -45,6 +45,7 @@ class productoController extends Controller implements interface_methods
         $producto->activo = true;
         $producto->precio_venta = $request->input('precio_venta');
         $producto->precio_compra = $request->input('precio_compra');
+        $producto->valoracion = $request->input('valoracion');
         $producto->id_descripcion = DB::table('descripcion')->select('id')->limit(1)->orderBy('id', 'desc')->get()[0]->id;
         $producto->stock_minimo = $request->input('stock_minimo');
         $producto->stock_actual = $request->input('stock_actual');
@@ -73,10 +74,11 @@ class productoController extends Controller implements interface_methods
         $i = 0;
         $descripcion = new descripcion();
         foreach (json_decode($request->input('array')) as $k => $v) {
-            if ($v != null) {
-                $i++;
-                $campo = $campos[$i]->COLUMN_NAME;
-                $descripcion->$campo = $v;
+            $nombre = $campos[++$i]->COLUMN_NAME;
+            if ($v != "") {
+                $descripcion->$nombre = $v;
+            } else {
+                $descripcion->$nombre = null;
             }
         }
         $descripcion->save();
@@ -104,7 +106,7 @@ class productoController extends Controller implements interface_methods
             }
         }
         $descripcion->save();
-        return response()->json();
+        return response()->json("actualizado");
     }
 
     public function update(Request $request)
@@ -128,7 +130,7 @@ class productoController extends Controller implements interface_methods
         Producto::where('id', '=', $id)->update(['id_categoria' => $id_categoria, 'id_fabricante' => $id_fabricante, 'nombre' => $request->input('nombre'),
             'cod_producto' => $request->input('cod_producto'), 'precio_venta' => $request->input('precio_venta'),
             'precio_compra' => $request->input('precio_compra'), 'stock_actual' => $request->input('stock_actual'),
-            'stock_minimo' => $request->input('stock_minimo')]);
+            'stock_minimo' => $request->input('stock_minimo'), 'valoracion' => $request->input('valoracion')]);
         //Comprueba si la foto ha sido actualizada y la reemplaza por la nueva
         if ($request->file('foto') !== null) {
             $foto = $producto->foto;

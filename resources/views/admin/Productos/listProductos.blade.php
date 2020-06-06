@@ -21,6 +21,7 @@
                                 <td>código del producto</td>
                                 <td>precio venta</td>
                                 <td>precio compra</td>
+                                <td>valoración</td>
                                 <td>stock actual</td>
                                 <td>stock minimo</td>
                                 <td>rebajado</td>
@@ -45,6 +46,7 @@
                                     <td>{{$p->cod_producto}}</td>
                                     <td>{{$p->precio_venta}}</td>
                                     <td>{{$p->precio_compra}}</td>
+                                    <td>{{$p->valoracion}}</td>
                                     <td>{{$p->stock_actual}}</td>
                                     <td>{{$p->stock_minimo}}</td>
                                     <td>@if($p->rebajado==0)no @else si @endif</td>

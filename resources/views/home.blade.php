@@ -30,7 +30,9 @@
                                                      style="text-decoration: line-through;display: block">{{$p->precio_anterior}}
                                                     €
                                                 </div>
-                                                <div class="col font-weight-bold">Ahora:{{$p->precio_venta}}€</div>
+                                                <div class="col font-weight-bold" style="color: red">
+                                                    Ahora:{{$p->precio_venta}}€
+                                                </div>
 
                                             </div>
                                             <img class="img-fluid" src={{URL::asset($p->foto)}} th:alt="foto"

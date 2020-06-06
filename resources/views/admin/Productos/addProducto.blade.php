@@ -7,7 +7,8 @@
                 <div class="card">
                     <div class="card-header w-auto text-center font-weight-bold bg-success">NUEVO PRODUCTO</div>
                     <div class="card-body bg-primary text-white">
-                        <form method="POST" enctype="multipart/form-data" action="{{'/admin/add/producto'}}">
+                        <form method="POST" enctype="multipart/form-data" action="{{'/admin/add/producto'}}"
+                              id="formulario">
                             @csrf
                             <table
                                 class="table table-responsive-lg text-white font-weight-bold text-uppercase table-hover">
@@ -88,6 +89,23 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        <label for="valoracion">{{ __('Valoración') }}</label>
+                                    </td>
+                                    <td>
+                                        <input id="valoracion" type="text"
+                                               class="form-control @error('valoracion') is-invalid @enderror"
+                                               name="valoracion"
+                                               required autocomplete="valoracion" min="0" max="10">
+
+                                        @error('valoracion')
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                        @enderror
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <label for="stock_minimo">{{ __('Stock minimo') }}</label>
                                     </td>
                                     <td>
@@ -137,17 +155,17 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div class="row">
-                                <div class="col-12">
-                                    <a href="#" class="btn btn-secondary float-right" onclick="popUp()">Añadir
-                                        descripcion</a>
-                                    <button id="btn-submit" type="submit" class="btn bg-dark text-white float-left"
-                                            onclick="enviar()" disabled>
-                                        {{ __('Añadir') }}
-                                    </button>
-                                </div>
-                            </div>
                         </form>
+                        <div class="row">
+                            <div class="col-12">
+                                <a href="#" class="btn btn-secondary float-right" onclick="popUp()">Añadir
+                                    descripcion</a>
+                                <button class="btn bg-dark text-white float-left"
+                                        onclick="enviar()">
+                                    {{ __('Añadir') }}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -157,7 +175,7 @@
         <div class="popup">
             <a href="#" id="btn-cerrar-popup" class="btn-cerrar-popup"><i class="fas fa-times"></i></a>
             <br>
-            <div class="contenedor-inputs">
+            <div id="contenedor-inputs">
                 <div id="borrar">
 
                 </div>
@@ -167,95 +185,25 @@
     <script type="application/javascript">
         var array = [];
         $(document).ready(function () {
-            //Validacion de campos rellenos
-            var correcto = false;
-            var a = 0;
-            $('#nombre').on('change', function () {
-                if ($('#nombre').val().length >= 1) {
-                    a++;
-                } else {
-                    a--;
-                }
-                console.log(a);
-            });
-            $('#precio_compra').on('change', function () {
-                if ($('#precio_compra').val().length >= 1) {
-                    a++;
-                } else {
-                    a--;
-                }
-                console.log(a);
-            });
-            $('#precio_venta').on('change', function () {
-                if ($('#precio_venta').val().length >= 1) {
-                    a++;
-                } else {
-                    a--;
-                }
-                console.log(a);
-            });
-            $('#stock_actual').on('change', function () {
-                if ($('#stock_actual').val().length >= 1) {
-                    a++;
-                } else {
-                    a--;
-                }
-                console.log(a);
-            });
-            $('#stock_minimo').on('change', function () {
-                if ($('#stock_minimo').val().length >= 1) {
-                    a++;
-                } else {
-                    a--;
-                }
-                console.log(a);
-            });
-            $('#foto').on('change', function () {
-                if ($('#foto').val().length >= 1) {
-                    a++;
-                } else {
-                    a--;
-                }
-                console.log(a);
-                if (a === 6) {
-                    $('#btn-submit').removeAttr("disabled");
-                }
-            });
-            //Fin de la validacion
-            array = ['pantalla', 'sistema_operativo', 'memoria_ram', 'almacenamiento_interno', 'almacenamiento_externo', 'camara_frontal', 'camara_trasera', 'procesador', 'bateria', 'conectividad', 'otras_caracteristicas'];
+            array = ['pantalla', 'sistema_operativo', 'memoria_ram', 'almacenamiento_interno', 'almacenamiento_externo', 'camara_frontal', 'camara_trasera', 'procesador', 'bateria', 'conectividad'];
             var close = document.getElementById("btn-cerrar-popup");
             close.onclick = function () {
                 document.getElementById("overlay").className = "overlay";
             };
-            renderizar(11, array);
-            $('select[name="categoria"]').on('change', function () {
-                var n = 0;
-                switch ($('select[name="categoria"]').val()) {
-                    case "moviles":
-                        array = ['pantalla', 'sistema_operativo', 'memoria_ram', 'almacenamiento_interno', 'almacenamiento_externo', 'camara_frontal', 'camara_trasera', 'procesador', 'bateria', 'conectividad'];
-                        n = 11;
-                        break;
-                    case "sobre mesa":
-                        array = ['placa_base', 'caja', 'fuente_alimentacion', 'procesador', 'disco_duro', 'memoria_ram', 'grafica', 'conexiones_delanteras', 'conexiones_traseras', 'tarjeta_sonido', 'tarjeta_red', 'sistema_operativo', 'dimensiones'];
-                        n = 14;
-                        break;
-                    case "portatiles":
-                        array = ['procesador', 'memoria_ram', 'almacenamiento', 'conectividad', 'camara', 'microfono', 'bateria', 'sistema_operativo', 'dimensiones', 'peso', 'color', 'grafica', 'display', 'unidad_optica', 'sonido', 'conexiones', 'teclado'];
-                        n = 18;
-                        break;
-                    case "monitores":
-                        array = ['puertos', 'peso', 'dimensiones', 'multimedia', 'pantalla'];
-                        n = 6;
-                        break;
-                    case "consolas":
-                        array = ['caracteristicas_generales', 'procesador', 'memoria_ram', 'almacenamiento_interno', 'entrada_salida', 'bluetooth', 'mando', 'conectividad'];
-                        n = 9;
-                        break;
-                }
-                array.push('otras_caracteristicas');
-                renderizar(n, array);
+            renderizar(10, array);
+        });
+        $('select[name="categoria"]').on('change', function () {
+            $.ajax({
+                type: 'post',
+                url: '/categorias/nombres',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {'categoria': JSON.stringify($('select[name="categoria"]').val())},
+                success: function (data) {
+                    renderizar(data.length, data);
+                },
             });
         });
+
 
         function renderizar(items, array) {
             var div = document.getElementById("borrar");
@@ -280,7 +228,7 @@
                 divRow.append(divCol, divCol1);
                 borrar.append(divRow);
             }
-            $('.contenedor-inputs').append(borrar);
+            document.getElementById("contenedor-inputs").appendChild(borrar);
         }
 
         function popUp() {
@@ -289,7 +237,7 @@
         }
 
         function enviar() {
-            var url = '{{route('descripcion')}}';
+            var url = '/admin/add/descripcion';
             var data = [];
             for (var i = 0; i < array.length; i++) {
                 data.push($("input[name=" + array[i] + "]").val());
@@ -299,12 +247,9 @@
                 url: url,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 data: {'array': JSON.stringify(data)},
-                success: function (data) {
-
+                success: function () {
+                    $('#formulario').submit();
                 },
-                error: function () {
-                    console.log("error en la peticion ajax");
-                }
             });
         }
     </script>

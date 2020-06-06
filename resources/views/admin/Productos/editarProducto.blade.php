@@ -50,6 +50,11 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td>Valoración</td>
+                                    <td><input type="text" value="{{$producto->valoracion}}" name="valoracion">
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Foto(*)</td>
                                     <td><input type="file" name="foto"></td>
                                 </tr>
@@ -78,7 +83,7 @@
                         </div>
                         <div class="text-center">
                             <button class="btn-outline-primary"
-                                    onclick="actualizarDescripcion({{$producto->id_descripcion}});document.getElementById('formulario').submit();">
+                                    onclick="actualizarDescripcion({{$producto->id_descripcion}});">
                                 Actualizar
                             </button>
                             <button onclick="borrar()" class="btn-outline-secondary">Dar de baja el producto</button>
@@ -95,11 +100,14 @@
     <script type="application/javascript">
         var array = [];
         $(document).ready(function () {
+            //Necesario para actualizar solo el producto y no la descripcion
+            popUp({{$producto->id_categoria}},{{$producto->id_descripcion}});
             //Cerrar PopUp
             var close = document.getElementById("btn-cerrar-popup");
             close.onclick = function () {
                 document.getElementById("overlay").className = "overlay";
             };
+            close.click();
             //Hacer consulta por ajax para ver que campos contiene el producto
 
             var primerCodigo = $('#texto').val();
@@ -208,8 +216,9 @@
                 url: url,
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 data: {'array': data, id: id},
-                success: function () {
-
+                success: function (data) {
+                    console.log(data);
+                    $('#formulario').submit();
                 }
             });
         }

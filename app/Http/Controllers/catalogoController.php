@@ -53,7 +53,6 @@ class catalogoController extends Controller
                     } else {
                         array_push($arrayCamposDescripcion, [$descripcion->$nombre]);
                     }
-
                 }
             }
             array_push($arrayDescripciones, $arrayCamposDescripcion);
@@ -63,9 +62,11 @@ class catalogoController extends Controller
         foreach ($arrayDescripciones as $arrays) {
             for ($i = 0; $i < count($arrayCamposCategoria); $i++) {
                 if (!empty($arrayFinal[$i])) {
-                    $valor = $arrays[$i][0];
-                    if (!in_array($valor, $arrayFinal[$i])) {
-                        array_push($arrayFinal[$i], $valor);
+                    if (!empty($arrays[$i])) {
+                        $valor = $arrays[$i][0];
+                        if (!in_array($valor, $arrayFinal[$i])) {
+                            array_push($arrayFinal[$i], $valor);
+                        }
                     }
                 } else {
                     $valor = $arrays[$i];
@@ -212,8 +213,7 @@ class catalogoController extends Controller
 
     public function showUser(Request $request)
     {
-        $id = $request->input('id');
-        $producto = Producto::find($id);
+        $producto = Producto::find($request->input('id'));
         $descripcion = descripcion::find($producto->id_descripcion);
         $arrayCamposDescripcion = array();
         //Se recorren los campos de la descripcion y guarda en un array los valores de los campos que son distintos de null ...
@@ -227,7 +227,7 @@ class catalogoController extends Controller
         $arrayCamposCategoria = array();
         foreach (DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'categorias'") as $campo) {
             $nombre = $campo->COLUMN_NAME;
-            if ($categoria->$nombre != null && $nombre != "id" && $nombre != "nombre" && $nombre != "created_at" && $nombre != "updated_at") {
+            if ($nombre != "id" && $nombre != "nombre" && $nombre != "created_at" && $nombre != "updated_at") {
                 array_push($arrayCamposCategoria, str_replace('_', ' ', $categoria->$nombre));
             }
         }

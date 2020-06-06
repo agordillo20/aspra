@@ -19,6 +19,20 @@ class adminController extends Controller
         $this->middleware('admin');
     }
 
+    public function nombres(Request $request)
+    {
+        $nombre = $request->input('categoria');
+        $categoria = Categoria::find(DB::select('SELECT ID FROM categorias where nombre=' . $nombre)[0]->ID);
+        $arrayCamposCategoria = array();
+        foreach (DB::select("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'aspra' AND table_name = 'categorias'") as $campo) {
+            $nombre = $campo->COLUMN_NAME;
+            if ($categoria->$nombre != null && $nombre != "id" && $nombre != "nombre" && $nombre != "created_at" && $nombre != "updated_at") {
+                array_push($arrayCamposCategoria, $categoria->$nombre);
+            }
+        }
+        return response()->json($arrayCamposCategoria);
+    }
+
     public function index()
     {
         return view('/admin/admin');
@@ -50,21 +64,24 @@ class adminController extends Controller
             $id = $request->input('id');
             $descripcion = descripcion::find($id);
             $array = array();
+            $pos = array();
+            $j = 0;
             foreach ($campos as $c) {
                 $campo = $c->COLUMN_NAME;
                 if (null !== $descripcion->$campo && $campo != 'id' && $campo != 'created_at' && $campo != 'updated_at') {
                     array_push($array, $descripcion->$campo);
+                    array_push($pos, $j);
                 }
+                $j++;
             }
             $atributos = count($array);
             $array1 = array();
             $array2 = array();
-            for ($i = 2; $i < $atributos + 2; $i++) {
+            for ($i = 0; $i < count($pos); $i++) {
                 //obtener cada columna que necesita
-                array_push($array1, $caracteristicas[$i]->COLUMN_NAME);
+                array_push($array1, $caracteristicas[$pos[$i] + 1]->COLUMN_NAME);
             }
-            $producto = Producto::where('id_descripcion', '=', $id)->get()->toArray()[0];
-            $id_categoria = $producto['id_categoria'];
+            $id_categoria = Producto::where('id_descripcion', '=', $id)->get()->toArray()[0]['id_categoria'];
             foreach ($array1 as $a) {
                 array_push($array2, DB::select("select " . $a . " from categorias where id=" . $id_categoria)[0]->$a);
             }
@@ -139,7 +156,7 @@ class adminController extends Controller
         $array = array();
         foreach ($campos as $c) {
             $campo = $c->COLUMN_NAME;
-            if (null !== $descripcion->$campo && $campo != 'id' && $campo != 'created_at' && $campo != 'updated_at') {
+            if ($campo != 'id' && $campo != 'created_at' && $campo != 'updated_at') {
                 array_push($array, $descripcion->$campo);
             }
         }

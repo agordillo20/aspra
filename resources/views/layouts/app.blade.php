@@ -60,13 +60,11 @@
             <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
-                    @if(!\Illuminate\Support\Facades\Auth::id()==1)
                     <li class="nav-item">
                         <i class="fas fa-shopping-cart" id="car"
                            style="font-size: 25px;padding-top: .4em;padding-right: .5em;cursor: pointer"
                            onclick="carrito()"></i>
                     </li>
-                    @endif
                     @guest
                         <li class="nav-item">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
@@ -133,6 +131,8 @@
     </main>
 </div>
 <div class="carrito ocultar text-center" id="carrito">
+{{--    establece la zona horaria, iniciar dos variables necesarias para el carrito y comprueba si la variable en sesion carrito esta
+inicializada y si es asi la recupera en una variable, si no la inicializa y la guarda en una variable de sesion--}}
     @php
         date_default_timezone_set('Europe/Madrid');
         $i=0;
